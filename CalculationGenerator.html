@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>算术天天练</title>
+  <!-- Vue.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <style>
+    .equation-column {
+      float: left;
+      width: 150px;
+    }
+    .equation-column ul {
+      padding: 0;
+      margin: 0;
+      list-style-type: none; /* Remove the default bullet */
+    }
+    .equation-column li {
+      margin-bottom: 10px; /* Adjust the spacing here */
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <h1>算术天天练</h1>
+  <div v-if="showInput">
+    <label for="rangeStart">Range Start:</label>
+    <input type="number" id="rangeStart" v-model.number="rangeStart" />
+    <label for="rangeEnd">Range End:</label>
+    <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
+    <label for="rowCount">Row Count:</label>
+    <input type="number" id="rowCount" v-model.number="rowCount" />
+    <label for="columnCount">Column Count:</label>
+    <input type="number" id="columnCount" v-model.number="columnCount" />
+    <label>Operators:</label>
+    <label for="plus">+</label>
+    <input type="checkbox" id="plus" value="+" v-model="operators">
+    <label for="minus">-</label>
+    <input type="checkbox" id="minus" value="-" v-model="operators">
+    <label for="multiply">*</label>
+    <input type="checkbox" id="multiply" value="*" v-model="operators">
+    <label for="divide">/</label>
+    <input type="checkbox" id="divide" value="/" v-model="operators">
+    <button @click="generateEquations">Generate Equations</button>
+  </div>
+  <div class="equation-column" v-for="(column, index) in columns" :key="index">
+    <h2>练习 {{ index + 1 }}</h2>
+    <ul>
+      <li v-for="(equation, i) in column" :key="i">
+        {{ equation.lbracket }}{{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }}{{ equation.rbracket }} {{ equation.operator2 }} {{ equation.number3 }} = ____
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      showInput: true,
+      rangeStart: 0,
+      rangeEnd: 20,
+      rowCount: 20,
+      columnCount: 5,
+      operators: ['+', '-', '*', '/'],
+      columns: []
+    },
+    methods: {
+      generateEquations() {
+        this.showInput = false;
+        this.columns = [];
+        const selectedOperators = this.operators;
+        const operators = selectedOperators.length === 0 ? ['+'] : selectedOperators; // If no operators selected, default to addition
+        for (let c = 0; c < this.columnCount; c++) {
+          const column = [];
+          for (let i = 0; i < this.rowCount; i++) {
+            let lbracket, rbracket, number1, number2, number3, operator, operator2, intermediateResult, result;
+			let isValid = true;
+            do {
+			  isValid = true;
+              number1 = Math.floor(Math.random() * (this.rangeEnd - this.rangeStart + 1)) + this.rangeStart;
+              number2 = Math.floor(Math.random() * (this.rangeEnd - this.rangeStart + 1)) + this.rangeStart;
+              number3 = Math.floor(Math.random() * (this.rangeEnd - this.rangeStart + 1)) + this.rangeStart;
+              operator = operators[Math.floor(Math.random() * operators.length)];
+              operator2 = operators[Math.floor(Math.random() * operators.length)];
+              if (operator === '/' && number2 === 0) {
+				isValid = false;
+                continue; // If divisor is zero, continue to next iteration
+              }
+			  
+			  if (operator === '/'){
+				
+				if (number1 % number2 != 0) {
+				  isValid = false;
+					continue;
+				}else
+				{
+				 console.log(number1 + '/' + number2  + ' is dividable!')
+				 
+				}
+              }
+              intermediateResult = this.calculateResult(number1, number2, operator);
+              if (operator2 === '/' && number3 === 0) {
+				isValid = false;
+                continue; // If divisor is zero, continue to next iteration
+              }
+			  
+			  if (operator2 === '/' ) {
+			  
+			   if (intermediateResult % number3  != 0){
+				isValid = false;
+				
+                continue;
+			  }
+			  }
+              result = this.calculateResult(intermediateResult, number3, operator2);
+			  
+			  if ((operator === '+' || operator === '-') && (intermediateResult < this.rangeStart || intermediateResult > this.rangeEnd))
+			  {
+				isValid = false;
+				continue;
+			  }
+			  
+			  if ((operator2 === '+' || operator2 ==='-') && (result < this.rangeStart || result > this.rangeEnd)){
+			    isValid = false;
+				continue;
+			  }
+			  
+            } while (!isValid);
+			lbracket = '';
+			rbracket = '';
+			if ((operator === '+' || operator === '-') && (operator2 === '*' || operator2 === '/'))
+			{
+				lbracket = ' ( ';
+				rbracket = ' ) ';
+			}
+            column.push({ lbracket, rbracket, number1, number2, number3, operator, operator2 });
+          }
+          this.columns.push(column);
+        }
+      },      
+	  calculateResult(number1, number2, operator) {
+        switch (operator) {
+          case '+':
+            return number1 + number2;
+          case '-':
+            return number1 - number2;
+          case '*':
+            return number1 * number2;
+		  case '/':
+			return number1 / number2;
+		}
+	  }
+    }
+  });
+</script>
+
+</body>
+</html>
