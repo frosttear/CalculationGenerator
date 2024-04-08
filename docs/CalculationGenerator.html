@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>算术天天练</title>
+  <title>口算天天练</title>
   <!-- Vue.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <style>
@@ -24,26 +24,26 @@
 <body>
 
 <div id="app">
-  <h1>算术天天练</h1>
+  <h1>口算天天练</h1>
   <div v-if="showInput">
-    <label for="rangeStart">Range Start:</label>
+    <label for="rangeStart">数字大于等于:</label>
     <input type="number" id="rangeStart" v-model.number="rangeStart" />
-    <label for="rangeEnd">Range End:</label>
+    <label for="rangeEnd">数字小于等于:</label>
     <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
-    <label for="rowCount">Row Count:</label>
+    <label for="rowCount">行数:</label>
     <input type="number" id="rowCount" v-model.number="rowCount" />
-    <label for="columnCount">Column Count:</label>
+    <label for="columnCount">列数:</label>
     <input type="number" id="columnCount" v-model.number="columnCount" />
-    <label>Operators:</label>
-    <label for="plus">+</label>
-    <input type="checkbox" id="plus" value="+" v-model="operators">
-    <label for="minus">-</label>
-    <input type="checkbox" id="minus" value="-" v-model="operators">
-    <label for="multiply">*</label>
-    <input type="checkbox" id="multiply" value="*" v-model="operators">
-    <label for="divide">/</label>
-    <input type="checkbox" id="divide" value="/" v-model="operators">
-    <button @click="generateEquations">Generate Equations</button>
+    <label>包含的运算符号:</label>
+    <label for="plus">&#x002B</label>
+    <input type="checkbox" id="plus" value="&#x002b" v-model="operators">
+    <label for="minus">&#x2212</label>
+    <input type="checkbox" id="minus" value="&#x2212" v-model="operators">
+    <label for="multiply">&#x00D7</label>
+    <input type="checkbox" id="multiply" value="&#x00d7" v-model="operators">
+    <label for="divide">&#x00F7</label>
+    <input type="checkbox" id="divide" value="&#x00f7" v-model="operators">
+    <button @click="generateEquations">点击生成</button>
   </div>
   <div class="equation-column" v-for="(column, index) in columns" :key="index">
     <h2>练习 {{ index + 1 }}</h2>
@@ -64,7 +64,7 @@
       rangeEnd: 20,
       rowCount: 20,
       columnCount: 5,
-      operators: ['+', '-', '*', '/'],
+      operators: ['\u002b', '\u2212'],
       columns: []
     },
     methods: {
@@ -72,7 +72,7 @@
         this.showInput = false;
         this.columns = [];
         const selectedOperators = this.operators;
-        const operators = selectedOperators.length === 0 ? ['+'] : selectedOperators; // If no operators selected, default to addition
+        const operators = selectedOperators.length === 0 ? ['\u002b'] : selectedOperators; // If no operators selected, default to addition
         for (let c = 0; c < this.columnCount; c++) {
           const column = [];
           for (let i = 0; i < this.rowCount; i++) {
@@ -85,45 +85,38 @@
               number3 = Math.floor(Math.random() * (this.rangeEnd - this.rangeStart + 1)) + this.rangeStart;
               operator = operators[Math.floor(Math.random() * operators.length)];
               operator2 = operators[Math.floor(Math.random() * operators.length)];
-              if (operator === '/' && number2 === 0) {
+              if (operator === '\u00F7' && number2 === 0) {
 				isValid = false;
                 continue; // If divisor is zero, continue to next iteration
               }
 			  
-			  if (operator === '/'){
+			  if (operator === '\u00F7'){
 				
 				if (number1 % number2 != 0) {
 				  isValid = false;
 					continue;
-				}else
-				{
-				 console.log(number1 + '/' + number2  + ' is dividable!')
-				 
 				}
               }
               intermediateResult = this.calculateResult(number1, number2, operator);
-              if (operator2 === '/' && number3 === 0) {
+              if (operator2 === '\u00F7' && number3 === 0) {
 				isValid = false;
                 continue; // If divisor is zero, continue to next iteration
               }
 			  
-			  if (operator2 === '/' ) {
-			  
-			   if (intermediateResult % number3  != 0){
+			  if (operator2 === '\u00F7' && intermediateResult % number3  != 0){
 				isValid = false;
-				
                 continue;
-			  }
 			  }
               result = this.calculateResult(intermediateResult, number3, operator2);
 			  
-			  if ((operator === '+' || operator === '-') && (intermediateResult < this.rangeStart || intermediateResult > this.rangeEnd))
+			  
+			  if ((operator === '\u002b' || operator === '\u2212') && (intermediateResult < this.rangeStart || intermediateResult > this.rangeEnd))
 			  {
 				isValid = false;
 				continue;
 			  }
 			  
-			  if ((operator2 === '+' || operator2 ==='-') && (result < this.rangeStart || result > this.rangeEnd)){
+			  if ((operator2 === '\u002b' || operator2 ==='\u2212') && (result < this.rangeStart || result > this.rangeEnd)){
 			    isValid = false;
 				continue;
 			  }
@@ -131,7 +124,7 @@
             } while (!isValid);
 			lbracket = '';
 			rbracket = '';
-			if ((operator === '+' || operator === '-') && (operator2 === '*' || operator2 === '/'))
+			if ((operator === '\u002b' || operator === '\u2212') && (operator2 === '\u00D7' || operator2 === '\u00F7'))
 			{
 				lbracket = ' ( ';
 				rbracket = ' ) ';
@@ -143,13 +136,13 @@
       },      
 	  calculateResult(number1, number2, operator) {
         switch (operator) {
-          case '+':
+          case '\u002b':
             return number1 + number2;
-          case '-':
+          case '\u2212':
             return number1 - number2;
-          case '*':
+          case '\u00D7':
             return number1 * number2;
-		  case '/':
+		  case '\u00F7':
 			return number1 / number2;
 		}
 	  }
