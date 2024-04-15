@@ -102,10 +102,15 @@
 				}
               }
 
-	      if (this.isTen && number1 % 10 != 0 && number2 %10 != 0){
+	      if (this.isTen && operator === '\u002b' && number1 % 10 != 0 && number2 %10 != 0){
                   isValid = false;
                   continue;
               }
+              if (this.isTen && operator === '\u2212' && number2 % 10 != 0){
+                  isValid = false;
+                  continue;
+              }
+
               intermediateResult = this.calculateResult(number1, number2, operator);
               
 			  
