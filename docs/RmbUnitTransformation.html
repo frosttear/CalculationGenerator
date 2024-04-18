@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>单位转换 - 元角分</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <style>
-    .equation-column {
-      float: left;
-      width: 300px;
-    }
-    .equation-column ul {
-      padding: 0;
-      margin: 0;
-      list-style-type: none; /* Remove the default bullet */
-    }
-    .equation-column li {
-      margin-bottom: 10px; /* Adjust the spacing here */
-    }
-  </style>
-</head>
-<body>
+      .equation-column {
+        float: left;
+        width: 300px;
+      }
+
+      .equation-column ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+        /* Remove the default bullet */
+      }
+
+      .equation-column li {
+        margin-bottom: 10px;
+        /* Adjust the spacing here */
+      }
+    </style>
+  </head>
+
+  <body>
     <div id="app">
-        
-    
-    <div v-if="showInput">
+      <div v-if="showInput">
         <label for="rangeStart">数字大于等于:</label>
         <input type="number" id="rangeStart" v-model.number="rangeStart" />
         <label for="rangeEnd">数字小于等于:</label>
@@ -33,83 +36,89 @@
         <input type="number" id="rowCount" v-model.number="rowCount" />
         <label for="columnCount">列数:</label>
         <input type="number" id="columnCount" v-model.number="columnCount" />
-        
+
         <button @click="generateEquations">生成</button>
       </div>
-  <div class="equation-column" v-for="(column, index) in columns" :key="index">
-    <h2>练习 {{ index + 1 }}</h2>
-    <ul>
-      <li v-for="(equation, i) in column" :key="i">
-        {{ equation.number }} {{ equation.numberUnit }} = {{ equation.result}}
-      </li>
-    </ul>
-  </div>
-    <script>
+      <div
+        class="equation-column"
+        v-for="(column, index) in columns"
+        :key="index"
+      >
+        <h2>练习 {{ index + 1 }}</h2>
+        <ul>
+          <li v-for="(equation, i) in column" :key="i">
+            {{ equation.number }} {{ equation.numberUnit }} = {{
+            equation.result}}
+          </li>
+        </ul>
+      </div>
+      <script>
         new Vue({
-            el: '#app',
-            data: {
-                 showInput: true,
-                 rangeStart: 1,
-                 rangeEnd: 1000,
-                 rowCount: 20,
-                 columnCount: 5,
-				 columns: []
+          el: "#app",
+          data: {
+            showInput: true,
+            rangeStart: 1,
+            rangeEnd: 1000,
+            rowCount: 20,
+            columnCount: 5,
+            columns: [],
+          },
+          methods: {
+            generateEquations() {
+              this.showInput = false;
+              this.columns = [];
+              const units = ["元", "角", "分"];
+              for (let c = 0; c < this.columnCount; c++) {
+                const column = [];
+                for (let i = 0; i < this.rowCount; i++) {
+                  const unit = units[Math.floor(Math.random() * units.length)];
+                  let number = 0; // Randomly generate number (1 - 1000)
+                  if (unit === "元") {
+                    number =
+                      Math.floor((Math.random() * this.rangeEnd) / 100) +
+                      this.rangeStart;
+                  }
+                  if (unit == "角") {
+                    number =
+                      Math.floor((Math.random() * this.rangeEnd) / 10) +
+                      this.rangeStart;
+                  }
+                  if (unit == "分") {
+                    number =
+                      Math.floor(Math.random() * this.rangeEnd) +
+                      this.rangeStart;
+                    if (number < 10) number += 10;
+                  }
+
+                  column.push({
+                    number: number,
+                    numberUnit: unit,
+                    result: this.generateResult(number, unit),
+                  });
+                }
+
+                this.columns.push(column);
+              }
             },
-            methods: {
-                generateEquations() {
-                    this.showInput = false;
-                    this.columns = [];
-                    const units = ['元', '角', '分'];  
-					for (let c = 0; c < this.columnCount; c++) {
-                        const column = [];
-                        for (let i = 0; i < this.rowCount; i++) {
-							  const unit = units[Math.floor(Math.random() * units.length)];
-							  let number = 0; // Randomly generate number (1 - 1000)
-							  if (unit === '元'){
-								number = Math.floor(Math.random() * this.rangeEnd / 100) + this.rangeStart;
-							  }
-							  if (unit == '角') {
-								number = Math.floor(Math.random() * this.rangeEnd / 10) + this.rangeStart;
-							  }
-							  if (unit == '分') {
-							    number = Math.floor(Math.random() * this.rangeEnd) + this.rangeStart;
-								if (number < 10)
-									number += 10;
-							  }
-							
-							column.push({
-								number: number,
-								numberUnit: unit,
-								result: this.generateResult(number, unit)
-							});
-						}
-					
-					this.columns.push(column);
-					}
-                },
-				generateResult(num, unit){
-				    let result = ''
-					switch (unit){
-						case '元':
-						     return '______ 角 = _______分  ';
-						break;
-						case '角':
-							if (num >= 10)
-								return '___元____角 = _______分';
-							else
-								return '_______分';
-						break;
-						case '分':
-						  if (num >= 100)
-							return '___元____角____分';
-						  else
-							return '____角';
-						break;
-					}
-				}
-                
-            }
+            generateResult(num, unit) {
+              let result = "";
+              switch (unit) {
+                case "元":
+                  return "______ 角 = _______分  ";
+                  break;
+                case "角":
+                  if (num >= 10) return "___元____角 = _______分";
+                  else return "_______分";
+                  break;
+                case "分":
+                  if (num >= 100) return "___元____角____分";
+                  else return "____角";
+                  break;
+              }
+            },
+          },
         });
-    </script>
-</body>
+      </script>
+    </div>
+  </body>
 </html>
