@@ -64,17 +64,18 @@
                         const column = [];
                         for (let i = 0; i < this.rowCount; i++) {
 							  const unit = units[Math.floor(Math.random() * units.length)];
-							  let number = Math.floor(Math.random() * this.rangeEnd) + this.rangeStart; 
+							  let number = 0
 							  if (unit === '小时'){
-								number = Math.ceil(number / 3600);
+								number = Math.floor(Math.random() * this.rangeEnd / 3600) + this.rangeStart;
 							  }
 							  if (unit == '分') {
-								number = Math.ceil(number / 60);
+								number = Math.floor(Math.random() * this.rangeEnd / 60) + this.rangeStart;
 							  }
-							  if (unit === '秒' && number < 60){
-								number += 60;
+							  if (unit == '秒') {
+							    number = Math.floor(Math.random() * this.rangeEnd) + this.rangeStart
+								if (number < 60)
+									number += 60;
 							  }
-							  
 							
 							column.push({
 								number: number,

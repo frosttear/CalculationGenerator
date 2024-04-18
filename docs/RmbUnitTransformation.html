@@ -64,15 +64,17 @@
                         const column = [];
                         for (let i = 0; i < this.rowCount; i++) {
 							  const unit = units[Math.floor(Math.random() * units.length)];
-							  let number = Math.floor(Math.random() * this.rangeEnd) + this.rangeStart; // Randomly generate number (1 - 1000)
+							  let number = 0; // Randomly generate number (1 - 1000)
 							  if (unit === '元'){
-								number = Math.ceil(number / 100);
+								number = Math.floor(Math.random() * this.rangeEnd / 100) + this.rangeStart;
 							  }
 							  if (unit == '角') {
-								number = Math.ceil(number / 10);
+								number = Math.floor(Math.random() * this.rangeEnd / 10) + this.rangeStart;
 							  }
-							  if (unit == '分' && number < 10 ) {
-								number += 10;
+							  if (unit == '分') {
+							    number = Math.floor(Math.random() * this.rangeEnd) + this.rangeStart;
+								if (number < 10)
+									number += 10;
 							  }
 							
 							column.push({
