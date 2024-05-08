@@ -40,6 +40,14 @@
         height: 15px;
         border: 1px solid black;
     }
+
+   .number-square{
+	display: inline-block;
+        width: 15px;
+        height: 15px;
+        border: 0px solid black;
+	text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -47,10 +55,14 @@
     <h1>口算天天练 - 竖式加减</h1>
     <div class="equations" v-for="(equationRow, index) in equationRows" :key="index">
       <div class="equation" v-for="equation in equationRow" :key="equation.id">
-        <span class="number">{{ equation.firstNumber }}</span>
+        <span class="number">
+          <span v-for="char in equation.firstNumberStr" :key="char" class="number-square">{{char}}</span>
+        </span>
         <br>
         <span>{{ equation.operator }}</span>
-        <span class="number">{{ equation.secondNumber }}</span>
+        <span class="number">
+          <span v-for="char in equation.secondNumberStr" :key="char" class="number-square">{{char}}</span>
+        </span>
         <div class="horizontal-line"></div>
         <span v-if="showResult">{{ equation.result }}</span>
         <span v-else><span class="blank-square" ></span> <span class="blank-square" ></span>
@@ -90,7 +102,10 @@
               result = firstNumber - secondNumber;
             }
             }while(result > 100 || result < 0);
-            equations.push({ id: i, firstNumber, operator, secondNumber, result });
+	    let firstNumberStr = String(firstNumber);
+	    let secondNumberStr = String(secondNumber);
+
+            equations.push({ id: i, firstNumberStr, operator, secondNumberStr, result });
           }
           return equations;
         },
