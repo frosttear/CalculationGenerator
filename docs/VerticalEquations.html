@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>口算天天练 - 竖式加减</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <style>
+    #app {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .equation {
+      text-align: right;
+      
+      margin-right: 20px;
+      padding-bottom: 20px;
+    }
+    .horizontal-line {
+      width: 100%;
+      border-bottom: 1px solid black;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .equations{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    }
+    .number {
+      text-align: right;
+      Font-size: 20px;
+
+    }
+
+    .blank-square{
+	display: inline-block;
+        width: 15px;
+        height: 15px;
+        border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>口算天天练 - 竖式加减</h1>
+    <div class="equations" v-for="(equationRow, index) in equationRows" :key="index">
+      <div class="equation" v-for="equation in equationRow" :key="equation.id">
+        <span class="number">{{ equation.firstNumber }}</span>
+        <br>
+        <span>{{ equation.operator }}</span>
+        <span class="number">{{ equation.secondNumber }}</span>
+        <div class="horizontal-line"></div>
+        <span v-if="showResult">{{ equation.result }}</span>
+        <span v-else><span class="blank-square" ></span> <span class="blank-square" ></span>
+      </div>
+    </div>
+    <button style = "display:none" @click="toggleResult">{{ showResult ? 'Hide' : 'Show' }} Results</button>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        equationRows: [],
+        showResult: false,
+        equationsPerRow: 5,
+        numRows: 8
+      },
+      created() {
+        this.generateEquationRows();
+      },
+      methods: {
+        generateEquations() {
+          let equations = [];
+          for (let i = 0; i < this.equationsPerRow; i++) {
+            let result;
+
+            const operator = Math.random() < 0.5 ? '\u002b' : '\u2212';
+	    let firstNumber; 
+            let secondNumber;
+	    do{
+                firstNumber = Math.floor(Math.random() * 100);
+		secondNumber = Math.floor(Math.random() * 100);
+            
+            if (operator === '\u002b') {
+              result = firstNumber + secondNumber;
+            } else {
+              result = firstNumber - secondNumber;
+            }
+            }while(result > 100 || result < 0);
+            equations.push({ id: i, firstNumber, operator, secondNumber, result });
+          }
+          return equations;
+        },
+        generateEquationRows() {
+          for (let i = 0; i < this.numRows; i++) {
+            this.equationRows.push(this.generateEquations());
+          }
+        },
+        toggleResult() {
+          this.showResult = !this.showResult;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
