@@ -93,15 +93,15 @@
 	    let firstNumber; 
             let secondNumber;
 	    do{
-                firstNumber = Math.floor(Math.random() * 100);
-		secondNumber = Math.floor(Math.random() * 100);
+                firstNumber = Math.floor(10 + Math.random() * 90);
+		secondNumber = Math.floor(10 + Math.random() * 90);
             
             if (operator === '\u002b') {
               result = firstNumber + secondNumber;
             } else {
               result = firstNumber - secondNumber;
             }
-            }while(result > 100 || result < 0);
+            }while(result > 100 || result < 10);
 	    let firstNumberStr = String(firstNumber);
 	    let secondNumberStr = String(secondNumber);
 
