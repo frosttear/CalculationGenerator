@@ -8,23 +8,32 @@
   <!-- Vue.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <style>
-    .equation-column {
-      float: left;
-      width: 150px;
-    }
+        table {
+            margin-bottom: 0px;
+            border-collapse: collapse;
+        }
 
-    .equation-column ul {
-      padding: 0;
-      margin: 0;
-      list-style-type: none;
-      /* Remove the default bullet */
-    }
+        th {
+            text-align: left;
+            padding: 10px;
+            font-weight: bold;
+        }
 
-    .equation-column li {
-      margin-bottom: 10px;
-      /* Adjust the spacing here */
-    }
-  </style>
+        td {
+            padding: 5px 15px;
+            text-align: left;
+        }
+
+        .header {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .equation {
+            min-width: 100px;
+            padding: 5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,10 +45,10 @@
       <input type="number" id="rangeStart" v-model.number="rangeStart" />
       <label for="rangeEnd">数字小于等于:</label>
       <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
-      <label for="rowCount">行数:</label>
-      <input type="number" id="rowCount" v-model.number="rowCount" />
-      <label for="columnCount">列数:</label>
-      <input type="number" id="columnCount" v-model.number="columnCount" />
+      <label for="dailyNum">每日题数:</label>
+      <input type="number" id="dailyNum" v-model.number="dailyNum" />
+      <label for="dayCount">天数:</label>
+      <input type="number" id="dayCount" v-model.number="dayCount" />
       <label>包含的运算符号:</label>
       <label for="plus">&#x002B</label>
       <input type="checkbox" id="plus" value="&#x002b" v-model="operators">
@@ -51,17 +60,32 @@
       <input type="checkbox" id="divide" value="&#x00f7" v-model="operators">
       <button @click="generateEquations">点击生成</button>
     </div>
-    <div class="equation-column" v-for="(column, index) in columns" :key="index">
-      <h2>练习 {{ index + 1 }}</h2>
-      <ul>
-        <li v-for="(equation, i) in column" :key="i">
-          {{ equation.lbracket }}{{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }}{{
-          equation.rbracket }} {{ equation.operator2 }} {{ equation.number3 }} = ____
-        </li>
-      </ul>
-    </div>
+    <div v-if="equationGroups.length > 0">
+            <div v-for="(dayGroup, index) in equationGroups" :key="index">
+                <h2 class="header">练习 {{ index + 1 }} </h2>
+                <table border="0">
+                    <tr v-for="row in dayGroup" :key="row">
+                        <td v-for="(equation, rowIndex) in row" :key="rowIndex" class="equation"> {{ equation.lbracket }}{{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }}{{
+          equation.rbracket }} {{ equation.operator2 }} {{ equation.number3 }} = ____</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+     <div style="page-break-after: always;"></div>
+     <h1>口算天天练 - 答案页</h1>
+     <div v-if="equationGroups.length > 0">
+            <div v-for="(dayGroup, index2) in equationGroups" :key="index2">
+                <h2 class="header">练习 {{ index2 + 1 }} </h2>
+                <table border="0">
+                    <tr v-for="row in dayGroup" :key="row">
+                        <td v-for="(equation, rowIndex2) in row" :key="rowIndex2" class="equation"> {{ equation.lbracket }}{{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }}{{
+          equation.rbracket }} {{ equation.operator2 }} {{ equation.number3 }} = {{ equation.result }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+   </div>
   </div>
-
   <script>
     new Vue({
       el: '#app',
@@ -69,20 +93,22 @@
         showInput: true,
         rangeStart: 0,
         rangeEnd: 20,
-        rowCount: 20,
-        columnCount: 5,
+        dayCount: 5,
+        dailyNum: 20,
         operators: ['\u002b', '\u2212'],
-        columns: []
+        equationGroups: []
       },
       methods: {
         generateEquations() {
           this.showInput = false;
-          this.columns = [];
+          this.equationGroups = [];
           const selectedOperators = this.operators;
           const operators = selectedOperators.length === 0 ? ['\u002b'] : selectedOperators; // If no operators selected, default to addition
-          for (let c = 0; c < this.columnCount; c++) {
-            const column = [];
-            for (let i = 0; i < this.rowCount; i++) {
+          for (let c = 0; c < this.dayCount; c++) {
+            const dayGroup = [];
+            let rowEquations = [];
+            for (let i = 0; i < this.dailyNum; i++) {
+              
               let lbracket, rbracket, number1, number2, number3, operator, operator2, intermediateResult, result;
               let isValid = true;
               do {
@@ -134,10 +160,17 @@
                 lbracket = ' ( ';
                 rbracket = ' ) ';
               }
-              column.push({ lbracket, rbracket, number1, number2, number3, operator, operator2 });
+               rowEquations.push({ lbracket, rbracket, number1, number2, number3, operator, operator2, result});
+	      if ((i + 1) % 5 == 0 || i == this.dailyNum - 1){
+                dayGroup.push(rowEquations);
+               
+		rowEquations = [];
+	      }
+              
             }
-            this.columns.push(column);
+            this.equationGroups.push(dayGroup);
           }
+	   console.log(this.equationGroups);
         },
         calculateResult(number1, number2, operator) {
           switch (operator) {
