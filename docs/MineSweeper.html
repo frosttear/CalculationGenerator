@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Minesweeper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .grid {
+            display: grid;
+            margin: 20px auto;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid #999; /* Add border to create grid lines */
+            box-sizing: border-box;  /* Include border in the cell's dimensions */
+        }
+        .cell.revealed {
+            background-color: #eee;
+        }
+        .cell.mine {
+            background-color: red;
+        }
+        .cell.flagged {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Minesweeper</h1>
+
+        <!-- Difficulty selection -->
+        <label for="difficulty">Select Difficulty: </label>
+        <select id="difficulty" v-model="difficulty" @change="resetGame">
+            <option value="beginner">Beginner (9x9, 10 mines)</option>
+            <option value="intermediate">Intermediate (16x16, 40 mines)</option>
+            <option value="expert">Expert (30x16, 99 mines)</option>
+        </select>
+
+        <button @click="resetGame">Restart Game</button>
+        
+        <div class="grid" :style="{ gridTemplateColumns: 'repeat(' + cols + ', 30px)' }">
+            <div v-for="(cell, index) in grid" 
+                :key="index"
+                :class="['cell', { revealed: cell.revealed, mine: cell.mine && cell.revealed, flagged: cell.flagged }]" 
+                @click="revealCell(index)" 
+                @contextmenu.prevent="flagCell(index)">
+                <span v-if="cell.revealed && !cell.mine">{{ cell.adjacentMines || '' }}</span>
+                <span v-if="cell.flagged">🚩</span>
+                <span v-if="cell.mine && !cell.flagged && cell.revealed">💣</span>
+            </div>
+        </div>
+        
+        <p v-if="gameOver">Game Over! 💥</p>
+        <p v-if="win">You Win! 🎉</p>
+    </div>
+
+    <!-- Vue.js from unpkg (alternative CDN) -->
+    <script src="js\vue.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    grid: [],
+                    rows: 9,
+                    cols: 9,
+                    minesCount: 10,
+                    gameOver: false,
+                    win: false,
+                    difficulty: 'beginner'
+                };
+            },
+            created() {
+                this.resetGame();
+            },
+            methods: {
+                resetGame() {
+                    this.setDifficulty();
+
+                    this.grid = [];
+                    this.gameOver = false;
+                    this.win = false;
+
+                    // Initialize grid
+                    for (let i = 0; i < this.rows * this.cols; i++) {
+                        this.grid.push({
+                            revealed: false,
+                            mine: false,
+                            flagged: false,
+                            adjacentMines: 0
+                        });
+                    }
+
+                    // Place mines randomly
+                    let minesPlaced = 0;
+                    while (minesPlaced < this.minesCount) {
+                        let index = Math.floor(Math.random() * this.grid.length);
+                        if (!this.grid[index].mine) {
+                            this.grid[index].mine = true;
+                            minesPlaced++;
+                        }
+                    }
+
+                    // Calculate adjacent mines for each cell
+                    this.grid.forEach((cell, index) => {
+                        if (!cell.mine) {
+                            cell.adjacentMines = this.getAdjacentCells(index).filter(i => this.grid[i].mine).length;
+                        }
+                    });
+                },
+                setDifficulty() {
+                    // Set grid size and mine count based on selected difficulty
+                    switch (this.difficulty) {
+                        case 'beginner':
+                            this.rows = 9;
+                            this.cols = 9;
+                            this.minesCount = 10;
+                            break;
+                        case 'intermediate':
+                            this.rows = 16;
+                            this.cols = 16;
+                            this.minesCount = 40;
+                            break;
+                        case 'expert':
+                            this.rows = 16;
+                            this.cols = 30;
+                            this.minesCount = 99;
+                            break;
+                    }
+                },
+                getAdjacentCells(index) {
+                    const adj = [];
+                    const row = Math.floor(index / this.cols);
+                    const col = index % this.cols;
+
+                    for (let i = -1; i <= 1; i++) {
+                        for (let j = -1; j <= 1; j++) {
+                            if (i === 0 && j === 0) continue;
+                            const newRow = row + i;
+                            const newCol = col + j;
+                            if (newRow >= 0 && newRow < this.rows && newCol >= 0 && newCol < this.cols) {
+                                adj.push(newRow * this.cols + newCol);
+                            }
+                        }
+                    }
+                    return adj;
+                },
+                revealCell(index) {
+                    if (this.gameOver || this.grid[index].flagged || this.grid[index].revealed) return;
+
+                    const cell = this.grid[index];
+                    cell.revealed = true;
+
+                    if (cell.mine) {
+                        this.gameOver = true;
+                        this.revealAllMines();
+                        return;
+                    }
+
+                    if (cell.adjacentMines === 0) {
+                        this.getAdjacentCells(index).forEach(i => {
+                            if (!this.grid[i].revealed) this.revealCell(i);
+                        });
+                    }
+
+                    this.checkWin();
+                },
+                flagCell(index) {
+                    if (this.gameOver || this.grid[index].revealed) return;
+                    this.grid[index].flagged = !this.grid[index].flagged;
+                },
+                revealAllMines() {
+                    this.grid.forEach(cell => {
+                        if (cell.mine) {
+                            cell.revealed = true;
+                        }
+                    });
+                },
+                checkWin() {
+                    const nonMineCells = this.grid.filter(cell => !cell.mine);
+                    const revealedCells = nonMineCells.filter(cell => cell.revealed);
+                    if (revealedCells.length === nonMineCells.length) {
+                        this.win = true;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

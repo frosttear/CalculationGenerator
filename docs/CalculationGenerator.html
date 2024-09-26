@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>口算天天练</title>
   <!-- Vue.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="js\vue.min.js"></script>
   <style>
         table {
             margin-bottom: 0px;
@@ -41,9 +41,9 @@
   <div id="app">
     <h1>口算天天练</h1>
     <div v-if="showInput">
-      <label for="rangeStart">数字大于等于:</label>
+      <label for="rangeStart">数字范围:</label>
       <input type="number" id="rangeStart" v-model.number="rangeStart" />
-      <label for="rangeEnd">数字小于等于:</label>
+      <label for="rangeEnd">到</label>
       <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
       <label for="dailyNum">每日题数:</label>
       <input type="number" id="dailyNum" v-model.number="dailyNum" />

@@ -4,24 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>单位转换 - 元角分</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="js\vue.min.js"></script>
     <style>
-      .equation-column {
-        float: left;
-        width: 300px;
-      }
+        table {
+            margin-bottom: 0px;
+            border-collapse: collapse;
+        }
 
-      .equation-column ul {
-        padding: 0;
-        margin: 0;
-        list-style-type: none;
-        /* Remove the default bullet */
-      }
+        th {
+            text-align: left;
+            padding: 10px;
+            font-weight: bold;
+        }
 
-      .equation-column li {
-        margin-bottom: 10px;
-        /* Adjust the spacing here */
-      }
+        td {
+            padding: 5px 15px;
+            text-align: left;
+        }
+
+        .header {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .equation {
+            min-width: 100px;
+            padding: 5px;
+        }
     </style>
   </head>
 
@@ -32,9 +41,9 @@
         <input type="number" id="rangeStart" v-model.number="rangeStart" />
         <label for="rangeEnd">数字小于等于:</label>
         <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
-        <label for="rowCount">行数:</label>
+        <label for="dailyCount">每日题数:</label>
         <input type="number" id="rowCount" v-model.number="rowCount" />
-        <label for="columnCount">列数:</label>
+        <label for="dayCount">天数:</label>
         <input type="number" id="columnCount" v-model.number="columnCount" />
 
         <button @click="generateEquations">生成</button>
