@@ -71,8 +71,8 @@
                 @click="cellClicked(index)"
                 @contextmenu.prevent="flagCell(index)">
                 <span v-if="cell.revealed && !cell.mine">{{ cell.adjacentMines || '' }}</span>
-                <span v-if="cell.flagged">🚩</span>
-                <span v-if="cell.mine && cell.revealed && !cell.flagged">💣</span>
+                <span v-if="cell.flagged && !win && !gameOver">🚩</span>
+                <span v-if="cell.mine && ((win || gameOver) || (cell.revealed && !cell.flagged))">💣</span>
             </div>
         </div>
         
@@ -174,7 +174,7 @@
                     return adj;
                 },
                 cellClicked(index) {
-                    if (this.gameOver || this.grid[index].revealed) return;
+                    if (this.gameOver || this.win || this.grid[index].revealed) return;
 
                     if (this.flagMode) {
                         // Flag or unflag the cell
