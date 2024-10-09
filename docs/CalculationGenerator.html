@@ -45,8 +45,10 @@
       <input type="number" id="rangeStart" v-model.number="rangeStart" />
       <label for="rangeEnd">到</label>
       <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
-      <label for="dailyNum">每日题数:</label>
+      <label for="dailyNum">每日总题数:</label>
       <input type="number" id="dailyNum" v-model.number="dailyNum" />
+      <label for="dailyNum">每日三数运算题数:</label>
+      <input type="number" id="dailyTwoOperatorsNum" v-model.number="dailyTwoOperatorsNum" />
       <label for="dayCount">天数:</label>
       <input type="number" id="dayCount" v-model.number="dayCount" />
       <label>包含的运算符号:</label>
@@ -96,6 +98,8 @@
         dayCount: 5,
         dailyNum: 20,
         operators: ['\u002b', '\u2212'],
+        dailyTwoOperatorsNum: 5,
+	
         equationGroups: []
       },
       methods: {
@@ -103,6 +107,7 @@
           this.showInput = false;
           this.equationGroups = [];
           const selectedOperators = this.operators;
+	  const oneOperatorEquationNum =  this.dailyNum - this.dailyTwoOperatorsNum;
           const operators = selectedOperators.length === 0 ? ['\u002b'] : selectedOperators; // If no operators selected, default to addition
           for (let c = 0; c < this.dayCount; c++) {
             const dayGroup = [];
@@ -140,7 +145,9 @@
                   isValid = false;
                   continue;
                 }
+
                 result = this.calculateResult(intermediateResult, number3, operator2);
+		
 
 
                 if ((operator === '\u002b' || operator === '\u2212') && (intermediateResult < this.rangeStart || intermediateResult > this.rangeEnd)) {
@@ -156,10 +163,20 @@
               } while (!isValid);
               lbracket = '';
               rbracket = '';
-              if ((operator === '\u002b' || operator === '\u2212') && (operator2 === '\u00D7' || operator2 === '\u00F7')) {
+
+	      if (i < oneOperatorEquationNum){
+		//remove the number3 and operator2
+		result = intermediateResult;
+		number3 = '';
+                operator2 = '';
+              }
+
+              if (i >= oneOperatorEquationNum && (operator === '\u002b' || operator === '\u2212') && (operator2 === '\u00D7' || operator2 === '\u00F7')) {
                 lbracket = ' ( ';
                 rbracket = ' ) ';
               }
+		
+
                rowEquations.push({ lbracket, rbracket, number1, number2, number3, operator, operator2, result});
 	      if ((i + 1) % 5 == 0 || i == this.dailyNum - 1){
                 dayGroup.push(rowEquations);
