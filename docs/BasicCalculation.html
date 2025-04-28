@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>10以内加减法练习</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .container { display: flex; }
+        .column { flex: 1; padding: 10px; }
+        .column h3 { text-align: center; }
+        .column-inner { 
+            column-count: 4; 
+            line-height: 2.5em;
+            font-size: 30px;
+        }
+        .equation { white-space: nowrap; }
+        @media print {
+            body { margin: 0; }
+            .column { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center">10以内加减法练习</h2>
+    <div class="container">
+        <!-- 加法列 -->
+        <div class="column">
+            <h3>加法练习</h3>
+            <div class="column-inner">
+                <script>
+                    // 生成特殊排列的加法
+                    let addArr = [];
+                    for(let a=1; a<=4; a++){
+                        for(let b=a; b<=9 - a; b++){
+                            addArr.push(`${a} + ${b}`);
+                        }
+                    }
+		    addArr.sort(() => Math.random() - 0.5)
+                    addArr.forEach(eq => document.write(`<div class="equation">${eq} = </div>`));
+                </script>
+            </div>
+        </div>
+
+        <!-- 减法列 -->
+        <div class="column">
+            <h3>减法练习</h3>
+            <div class="column-inner">
+                <script>
+                    // 生成所有结果＞0的减法
+                    let subArr = [];
+                    for(let a=2; a<=9; a++){
+                        for(let b=1; b<a; b++){
+                            subArr.push(`${a} - ${b}`);
+                        }
+                    }
+                    subArr.sort(() => Math.random() - 0.5)
+
+                    subArr.forEach(eq => document.write(`<div class="equation">${eq} = </div>`));
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
