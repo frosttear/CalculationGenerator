@@ -5,7 +5,8 @@ describe('CalculationGenerator Integration Tests', () => {
         rangeStart: 1,
         rangeEnd: 100,
         dayCount: 1,
-        dailyNum: 50, // Generate a good number of equations to test distribution
+        rowsPerPage: 10, // New parameter
+        colsPerPage: 5,  // New parameter
         dailyTwoOperatorsNum: 25 // Half will be two-operator equations
     };
 
@@ -29,7 +30,7 @@ describe('CalculationGenerator Integration Tests', () => {
 
         // Expect at least 80% of two-operator equations to have mixed precedence
         // This threshold can be adjusted based on desired strictness and generation complexity.
-        expect(mixedPrecedenceCount / twoOpEquations.length).toBeGreaterThanOrEqual(0.8);
+        expect(mixedPrecedenceCount / twoOpEquations.length).toBe(1);
     });
 
     test('should ensure all intermediate and final results are within range and are integers', () => {

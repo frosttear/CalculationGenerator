@@ -47,9 +47,11 @@
       <input type="number" id="rangeStart" v-model.number="rangeStart" />
       <label for="rangeEnd">到</label>
       <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
-      <label for="dailyNum">每日总题数:</label>
-      <input type="number" id="dailyNum" v-model.number="dailyNum" />
-      <label for="dailyNum">每日三数运算题数:</label>
+      <label for="rowsPerPage">每页行数:</label>
+      <input type="number" id="rowsPerPage" v-model.number="rowsPerPage" />
+      <label for="colsPerPage">每页列数:</label>
+      <input type="number" id="colsPerPage" v-model.number="colsPerPage" />
+      <label for="dailyTwoOperatorsNum">每日三数运算题数:</label>
       <input type="number" id="dailyTwoOperatorsNum" v-model.number="dailyTwoOperatorsNum" />
       <label for="dayCount">天数:</label>
       <input type="number" id="dayCount" v-model.number="dayCount" />
@@ -68,9 +70,11 @@
             <div v-for="(dayGroup, index) in equationGroups" :key="index">
                 <h2 class="header">练习 {{ index + 1 }} </h2>
                 <table border="0">
-                    <tr v-for="row in dayGroup" :key="row">
-                        <td v-for="(equation, rowIndex) in row" :key="rowIndex" class="equation"> {{ equation.lbracket }}{{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }}{{
-          equation.rbracket }} {{ equation.operator2 }} {{ equation.number3 }} = ____</td>
+                    <tr v-for="rowIndex in rowsPerPage" :key="rowIndex">
+                        <td v-for="colIndex in colsPerPage" :key="colIndex" class="equation">
+                            {{ equationGroups[index][rowIndex - 1] && equationGroups[index][rowIndex - 1][colIndex - 1] ?
+                                `${equationGroups[index][rowIndex - 1][colIndex - 1].lbracket}${equationGroups[index][rowIndex - 1][colIndex - 1].number1} ${equationGroups[index][rowIndex - 1][colIndex - 1].operator} ${equationGroups[index][rowIndex - 1][colIndex - 1].number2}${equationGroups[index][rowIndex - 1][colIndex - 1].rbracket} ${equationGroups[index][rowIndex - 1][colIndex - 1].operator2} ${equationGroups[index][rowIndex - 1][colIndex - 1].number3} = ____` : '' }}
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -81,9 +85,11 @@
             <div v-for="(dayGroup, index2) in equationGroups" :key="index2">
                 <h2 class="header">练习 {{ index2 + 1 }} </h2>
                 <table border="0">
-                    <tr v-for="row in dayGroup" :key="row">
-                        <td v-for="(equation, rowIndex2) in row" :key="rowIndex2" class="equation"> {{ equation.lbracket }}{{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }}{{
-          equation.rbracket }} {{ equation.operator2 }} {{ equation.number3 }} = {{ equation.result }}</td>
+                    <tr v-for="rowIndex in rowsPerPage" :key="rowIndex">
+                        <td v-for="colIndex in colsPerPage" :key="colIndex" class="equation">
+                            {{ equationGroups[index2][rowIndex - 1] && equationGroups[index2][rowIndex - 1][colIndex - 1] ?
+                                `${equationGroups[index2][rowIndex - 1][colIndex - 1].lbracket}${equationGroups[index2][rowIndex - 1][colIndex - 1].number1} ${equationGroups[index2][rowIndex - 1][colIndex - 1].operator} ${equationGroups[index2][rowIndex - 1][colIndex - 1].number2}${equationGroups[index2][rowIndex - 1][colIndex - 1].rbracket} ${equationGroups[index2][rowIndex - 1][colIndex - 1].operator2} ${equationGroups[index2][rowIndex - 1][colIndex - 1].number3} = ${equationGroups[index2][rowIndex - 1][colIndex - 1].result}` : '' }}
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -99,8 +105,8 @@
         rangeStart: 0,
         rangeEnd: 20,
         dayCount: 5,
-        dailyNum: 20,
-        operators: ['\u002b', '\u2212'],
+        rowsPerPage: 10,
+        colsPerPage: 4,
         dailyTwoOperatorsNum: 5,
 	
         equationGroups: []
@@ -114,7 +120,9 @@
             dayCount: this.dayCount,
             dailyNum: this.dailyNum,
             operators: this.operators,
-            dailyTwoOperatorsNum: this.dailyTwoOperatorsNum
+            dailyTwoOperatorsNum: this.dailyTwoOperatorsNum,
+            rowsPerPage: this.rowsPerPage,
+            colsPerPage: this.colsPerPage
           });
         },
         calculateResult(number1, number2, operator) {

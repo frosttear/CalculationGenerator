@@ -3,9 +3,11 @@ const CalculationGenerator = {
 
     generateEquations(options) {
         const {
-            rangeStart, rangeEnd, dayCount, dailyNum, operators, dailyTwoOperatorsNum
+            rangeStart, rangeEnd, dayCount, operators, dailyTwoOperatorsNum,
+            rowsPerPage, colsPerPage
         } = options;
 
+        const dailyNum = rowsPerPage * colsPerPage;
         const oneOperatorEquationNum = dailyNum - dailyTwoOperatorsNum;
 
         const equationGroups = [];
@@ -72,10 +74,12 @@ const CalculationGenerator = {
                         const highPrecedenceOperators = operators.filter(op => op === '*' || op === '/');
 
                         if (lowPrecedenceOperators.length > 0 && highPrecedenceOperators.length > 0) {
-                            // Ensure operators have different precedence
-                            const firstOpIsLow = Math.random() < 0.5;
-                            operator = firstOpIsLow ? lowPrecedenceOperators[Math.floor(Math.random() * lowPrecedenceOperators.length)] : highPrecedenceOperators[Math.floor(Math.random() * highPrecedenceOperators.length)];
-                            operator2 = firstOpIsLow ? highPrecedenceOperators[Math.floor(Math.random() * highPrecedenceOperators.length)] : lowPrecedenceOperators[Math.floor(Math.random() * lowPrecedenceOperators.length)];
+                            // Strictly ensure operators have different precedence
+                            const op1Group = Math.random() < 0.5 ? lowPrecedenceOperators : highPrecedenceOperators;
+                            const op2Group = (op1Group === lowPrecedenceOperators) ? highPrecedenceOperators : lowPrecedenceOperators;
+
+                            operator = op1Group[Math.floor(Math.random() * op1Group.length)];
+                            operator2 = op2Group[Math.floor(Math.random() * op2Group.length)];
                         } else {
                             // Fallback if only one type of precedence is available
                             operator = operators[Math.floor(Math.random() * operators.length)];
@@ -167,7 +171,7 @@ const CalculationGenerator = {
                 }
 
                 rowEquations.push({ lbracket, rbracket, number1, number2, number3, operator, operator2, result });
-                if ((i + 1) % 5 == 0 || i == dailyNum - 1) {
+                if ((i + 1) % colsPerPage == 0 || i == dailyNum - 1) {
                     dayGroup.push(rowEquations);
                     rowEquations = [];
                 }
