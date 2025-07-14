@@ -5,8 +5,8 @@ describe('CalculationGenerator Integration Tests', () => {
         rangeStart: 1,
         rangeEnd: 100,
         dayCount: 1,
-        rowsPerPage: 10, // New parameter
-        colsPerPage: 5,  // New parameter
+        rowsPerDay: 10, // New parameter
+        colsPerDay: 5,  // New parameter
         dailyTwoOperatorsNum: 25 // Half will be two-operator equations
     };
 

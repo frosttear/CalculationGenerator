@@ -24,8 +24,8 @@ describe('CalculationGenerator', () => {
             rangeStart: 0,
             rangeEnd: 100,
             dayCount: 1,
-            rowsPerPage: 10,
-            colsPerPage: 10,
+            rowsPerDay: 10,
+            colsPerDay: 10,
             operators: ['+', '-', '*', '/'],
             dailyTwoOperatorsNum: 5
         };
@@ -38,7 +38,7 @@ describe('CalculationGenerator', () => {
         test('should generate the correct number of equations per day', () => {
             const equationGroups = CalculationGenerator.generateEquations(options);
             const totalEquations = equationGroups[0].flat().length;
-            expect(totalEquations).toBe(options.rowsPerPage * options.colsPerPage);
+            expect(totalEquations).toBe(options.rowsPerDay * options.colsPerDay);
         });
     });
 });

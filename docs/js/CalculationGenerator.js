@@ -4,10 +4,10 @@ const CalculationGenerator = {
     generateEquations(options) {
         const {
             rangeStart, rangeEnd, dayCount, operators, dailyTwoOperatorsNum,
-            rowsPerPage, colsPerPage
+            rowsPerDay, colsPerDay
         } = options;
 
-        const dailyNum = rowsPerPage * colsPerPage;
+        const dailyNum = rowsPerDay * colsPerDay;
         const oneOperatorEquationNum = dailyNum - dailyTwoOperatorsNum;
 
         const equationGroups = [];
@@ -17,8 +17,9 @@ const CalculationGenerator = {
 
         for (let c = 0; c < dayCount; c++) {
             const dayGroup = [];
-            let rowEquations = [];
-            for (let i = 0; i < dailyNum; i++) {
+            let equationCountInDay = 0;
+
+            while (equationCountInDay < dailyNum) {
                 let number1, number2, number3, operator, operator2, result;
                 let lbracket = '', rbracket = '';
                 let isValid = false;
@@ -28,27 +29,24 @@ const CalculationGenerator = {
                     lbracket = '';
                     rbracket = '';
 
-                    if (i < oneOperatorEquationNum) {
-                        operator = operators[Math.floor(Math.random() * operators.length)];
+                    if (equationCountInDay < oneOperatorEquationNum) {
                         // One-operator equation
+                        operator = operators[Math.floor(Math.random() * operators.length)];
                         operator2 = '';
                         number3 = '';
 
                         if (operator === '/') {
-                            // Generate for division: dividend / divisor = quotient
                             let quotient = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
                             let divisor = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
                             number1 = quotient * divisor;
                             number2 = divisor;
 
-                            // Ensure numbers are within range and not zero
                             if (number1 > rangeEnd || number1 < rangeStart || number2 === 0 || number2 < rangeStart || number2 > rangeEnd) {
                                 isValid = false;
                                 continue;
                             }
                         } else if (operator === '*') {
-                            // Generate for multiplication: limit numbers to avoid overflow
-                            let maxFactor = Math.floor(Math.sqrt(rangeEnd)); // Heuristic to keep products in range
+                            let maxFactor = Math.floor(Math.sqrt(rangeEnd));
                             if (maxFactor < 1) maxFactor = 1;
                             number1 = getRandomNumber(rangeStart, maxFactor);
                             number2 = getRandomNumber(rangeStart, maxFactor);
@@ -57,7 +55,6 @@ const CalculationGenerator = {
                                 continue;
                             }
                         } else {
-                            // For + and -
                             number1 = getRandomNumber(rangeStart, rangeEnd);
                             number2 = getRandomNumber(rangeStart, rangeEnd);
                         }
@@ -86,9 +83,7 @@ const CalculationGenerator = {
                             operator2 = operators[Math.floor(Math.random() * operators.length)];
                         }
 
-                        // Generate numbers based on operators to increase validity
                         if (operator === '/' || operator2 === '/') {
-                            // Prioritize division generation
                             let op1IsDiv = (operator === '/');
                             let op2IsDiv = (operator2 === '/');
 
@@ -109,11 +104,11 @@ const CalculationGenerator = {
                             if (op2IsDiv) {
                                 let quotient = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
                                 let divisor = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
-                                if (op1IsDiv) { // If first op is also div, number2 is already set
+                                if (op1IsDiv) {
                                     number3 = divisor;
                                 } else {
                                     number3 = divisor;
-                                    number2 = quotient * divisor; // This might overwrite number2 if op1 is not div
+                                    number2 = quotient * divisor;
                                     if (number2 > rangeEnd || number2 < rangeStart || number3 === 0 || number3 < rangeStart || number3 > rangeEnd) {
                                         isValid = false;
                                         continue;
@@ -124,8 +119,7 @@ const CalculationGenerator = {
                             }
 
                         } else if (operator === '*' || operator2 === '*') {
-                            // Prioritize multiplication generation
-                            let maxFactor = Math.floor(Math.pow(rangeEnd, 1/3)); // For 3 numbers, cube root
+                            let maxFactor = Math.floor(Math.pow(rangeEnd, 1/3));
                             if (maxFactor < 1) maxFactor = 1;
 
                             number1 = getRandomNumber(rangeStart, maxFactor);
@@ -133,7 +127,6 @@ const CalculationGenerator = {
                             number3 = getRandomNumber(rangeStart, maxFactor);
 
                         } else {
-                            // For + and -
                             number1 = getRandomNumber(rangeStart, rangeEnd);
                             number2 = getRandomNumber(rangeStart, rangeEnd);
                             number3 = getRandomNumber(rangeStart, rangeEnd);
@@ -158,7 +151,6 @@ const CalculationGenerator = {
                             result = this.calculateResult(intermediateResult, number3, operator2);
                         }
                         
-                        // Final validation for two-operator equations
                         if (result < rangeStart || result > rangeEnd || !Number.isInteger(result) ||
                             (operator === '/' && (number2 === 0 || number1 % number2 !== 0)) ||
                             (operator2 === '/' && (number3 === 0 || intermediateResult % number3 !== 0 && !forceLeftToRight)) ||
@@ -170,11 +162,13 @@ const CalculationGenerator = {
                     }
                 }
 
-                rowEquations.push({ lbracket, rbracket, number1, number2, number3, operator, operator2, result });
-                if ((i + 1) % colsPerPage == 0 || i == dailyNum - 1) {
+                // Add equation to the current row
+                if (equationCountInDay % colsPerDay === 0) {
+                    rowEquations = []; // Start a new row
                     dayGroup.push(rowEquations);
-                    rowEquations = [];
                 }
+                rowEquations.push({ lbracket, rbracket, number1, number2, number3, operator, operator2, result });
+                equationCountInDay++;
             }
             equationGroups.push(dayGroup);
         }
