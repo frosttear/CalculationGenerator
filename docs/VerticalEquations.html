@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>口算天天练 - 竖式加减</title>
-  <script src="js\vue.min.js"></script>
+  <script src="js/vue.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
   <style>
     #app {
       font-family: Arial, sans-serif;
@@ -51,6 +52,7 @@
   </style>
 </head>
 <body>
+  <a href="../index.html" class="back-link">Back to Home</a>
   <div id="app">
     <h1>口算天天练 - 竖式加减</h1>
     <div class="equations" v-for="(equationRow, index) in equationRows" :key="index">

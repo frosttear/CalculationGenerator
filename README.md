@@ -1,37 +1,45 @@
-# Arithmetic Operations and Unit Transformation Practice Pages
+# Calculation Practice Pages
 
 ## Introduction
-These [practice pages](https://frosttear.github.io/CalculationGenerator/) are designed to help kids improve their arithmetic skills by generating random arithmetic equations for practice. The equations cover addition, subtraction, multiplication, and division operations. Additionally, the pages include unit transformation exercises for time and currency, providing a comprehensive practice experience for children.
+
+This project provides a collection of web-based practice pages designed to help children improve their arithmetic and unit conversion skills. The pages are built with HTML, CSS, and Vue.js, and they generate a variety of exercises dynamically.
+
+You can access the practice pages here: [https://frosttear.github.io/CalculationGenerator/](https://frosttear.github.io/CalculationGenerator/)
 
 ## Features
-- Randomly generated arithmetic equations
-- Options to customize the range of numbers used in equations
-- Practice for addition, subtraction, multiplication, and division operations
-- Unit transformation exercises for time and currency
-- Suitable for kids of different skill levels
-- Interactive and engaging design
+
+*   **Central Hub:** An `index.html` page provides easy navigation to all practice modules.
+*   **Variety of Exercises:**
+    *   Basic addition and subtraction within 10.
+    *   Customizable arithmetic problems (addition, subtraction, multiplication, division) with configurable number ranges and complexity.
+    *   Vertical addition and subtraction problems.
+    *   Unit conversion exercises for Chinese RMB (Yuan, Jiao, Fen) and time (Hours, Minutes, Seconds).
+*   **Interactive and Printable:** The pages are designed to be used interactively in the browser or printed for offline practice.
+*   **Minesweeper Game:** A classic Minesweeper game is included for fun and to practice logical thinking.
+
+## Available Practice Pages
+
+All pages can be accessed from the main [`docs/index.html`](./docs/index.html) page.
+
+*   **[Basic Calculation](./docs/BasicCalculation.html):** Generates simple addition and subtraction problems for numbers within 10.
+*   **[Calculation Generator](./docs/CalculationGenerator.html):** A flexible generator for creating practice sheets with a mix of operators (+, -, ×, ÷), configurable number ranges, and problems with up to three numbers.
+*   **[Calculation Generator 2](./docs/CalculationGenerator2.html):** Creates column-based arithmetic problems.
+*   **[Vertical Equations](./docs/VerticalEquations.html):** Focuses on two-digit vertical (columnar) addition and subtraction.
+*   **[RMB Unit Transformation](./docs/RmbUnitTransformation.html):** Practice converting between Chinese currency units: Yuan (元), Jiao (角), and Fen (分).
+*   **[Time Unit Transformation](./docs/TimeUnitTransformation.html):** Practice converting between time units: Hours, Minutes, and Seconds.
+*   **[Minesweeper](./docs/MineSweeper.html):** The classic logic puzzle game.
 
 ## Getting Started
-To access the arithmetic operations and unit transformation practice pages, simply open the site in a web browser.
 
-## Usage
-1. Open the HTML file corresponding to the desired practice page (arithmetic operations or unit transformation).
-2. Customize the range of numbers used in the equations if desired.
-3. Click the button to generate equations.
-4. Print the page for kids to exercise.
-
-## Options
-- Arithmetic Operations Practice:
-  - Addition Practice: Practice adding numbers within a specified range.
-  - Subtraction Practice: Practice subtracting numbers within a specified range.
-  - Multiplication Practice: Practice multiplying numbers within a specified range.
-  - Division Practice: Practice dividing numbers within a specified range.
-- Unit Transformation Practice:
-  - Time Transformation: Practice converting between different units of time (e.g., hours, minutes, seconds).
-  - Currency Transformation: Practice converting between different units of currency (e.g., Yuan, Jiao, Fen).
+1.  Clone the repository to your local machine.
+2.  Navigate to the `docs` directory.
+3.  Open `index.html` in your web browser to see the main menu.
+4.  Click on any of the cards to go to the specific practice page.
 
 ## Contributing
+
 If you would like to contribute to the development of these practice pages, feel free to submit pull requests or open issues on the GitHub repository.
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+
+This project is licensed under the MIT License.

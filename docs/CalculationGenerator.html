@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>口算天天练</title>
   <!-- Vue.js CDN -->
-  <script src="js\vue.min.js"></script>
+  <script src="js/vue.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
   <style>
         table {
             margin-bottom: 0px;
@@ -37,6 +38,7 @@
 </head>
 
 <body>
+  <a href="../index.html" class="back-link">Back to Home</a>
 
   <div id="app">
     <h1>口算天天练</h1>
@@ -53,13 +55,13 @@
       <input type="number" id="dayCount" v-model.number="dayCount" />
       <label>包含的运算符号:</label>
       <label for="plus">&#x002B</label>
-      <input type="checkbox" id="plus" value="&#x002b" v-model="operators">
+      <input type="checkbox" id="plus" value="+" v-model="operators">
       <label for="minus">&#x2212</label>
-      <input type="checkbox" id="minus" value="&#x2212" v-model="operators">
+      <input type="checkbox" id="minus" value="-" v-model="operators">
       <label for="multiply">&#x00D7</label>
-      <input type="checkbox" id="multiply" value="&#x00d7" v-model="operators">
+      <input type="checkbox" id="multiply" value="*" v-model="operators">
       <label for="divide">&#x00F7</label>
-      <input type="checkbox" id="divide" value="&#x00f7" v-model="operators">
+      <input type="checkbox" id="divide" value="/" v-model="operators">
       <button @click="generateEquations">点击生成</button>
     </div>
     <div v-if="equationGroups.length > 0">
@@ -88,6 +90,7 @@
         </div>
    </div>
   </div>
+  <script src="js/CalculationGenerator.js"></script>
   <script>
     new Vue({
       el: '#app',
@@ -105,101 +108,17 @@
       methods: {
         generateEquations() {
           this.showInput = false;
-          this.equationGroups = [];
-          const selectedOperators = this.operators;
-	  const oneOperatorEquationNum =  this.dailyNum - this.dailyTwoOperatorsNum;
-          const operators = selectedOperators.length === 0 ? ['\u002b'] : selectedOperators; // If no operators selected, default to addition
-          for (let c = 0; c < this.dayCount; c++) {
-            const dayGroup = [];
-            let rowEquations = [];
-            for (let i = 0; i < this.dailyNum; i++) {
-              
-              let lbracket, rbracket, number1, number2, number3, operator, operator2, intermediateResult, result;
-              let isValid = true;
-              do {
-                isValid = true;
-                number1 = Math.floor(Math.random() * (this.rangeEnd - this.rangeStart + 1)) + this.rangeStart;
-                number2 = Math.floor(Math.random() * (this.rangeEnd - this.rangeStart + 1)) + this.rangeStart;
-                number3 = Math.floor(Math.random() * (this.rangeEnd - this.rangeStart + 1)) + this.rangeStart;
-                operator = operators[Math.floor(Math.random() * operators.length)];
-                operator2 = operators[Math.floor(Math.random() * operators.length)];
-                if (operator === '\u00F7' && number2 === 0) {
-                  isValid = false;
-                  continue; // If divisor is zero, continue to next iteration
-                }
-
-                if (operator === '\u00F7') {
-
-                  if (number1 % number2 != 0) {
-                    isValid = false;
-                    continue;
-                  }
-                }
-                intermediateResult = this.calculateResult(number1, number2, operator);
-                if (operator2 === '\u00F7' && number3 === 0) {
-                  isValid = false;
-                  continue; // If divisor is zero, continue to next iteration
-                }
-
-                if (operator2 === '\u00F7' && intermediateResult % number3 != 0) {
-                  isValid = false;
-                  continue;
-                }
-
-                result = this.calculateResult(intermediateResult, number3, operator2);
-		
-
-
-                if ((operator === '\u002b' || operator === '\u2212') && (intermediateResult < this.rangeStart || intermediateResult > this.rangeEnd)) {
-                  isValid = false;
-                  continue;
-                }
-
-                if ((operator2 === '\u002b' || operator2 === '\u2212') && (result < this.rangeStart || result > this.rangeEnd)) {
-                  isValid = false;
-                  continue;
-                }
-
-              } while (!isValid);
-              lbracket = '';
-              rbracket = '';
-
-	      if (i < oneOperatorEquationNum){
-		//remove the number3 and operator2
-		result = intermediateResult;
-		number3 = '';
-                operator2 = '';
-              }
-
-              if (i >= oneOperatorEquationNum && (operator === '\u002b' || operator === '\u2212') && (operator2 === '\u00D7' || operator2 === '\u00F7')) {
-                lbracket = ' ( ';
-                rbracket = ' ) ';
-              }
-		
-
-               rowEquations.push({ lbracket, rbracket, number1, number2, number3, operator, operator2, result});
-	      if ((i + 1) % 5 == 0 || i == this.dailyNum - 1){
-                dayGroup.push(rowEquations);
-               
-		rowEquations = [];
-	      }
-              
-            }
-            this.equationGroups.push(dayGroup);
-          }
-	   console.log(this.equationGroups);
+          this.equationGroups = CalculationGenerator.generateEquations({
+            rangeStart: this.rangeStart,
+            rangeEnd: this.rangeEnd,
+            dayCount: this.dayCount,
+            dailyNum: this.dailyNum,
+            operators: this.operators,
+            dailyTwoOperatorsNum: this.dailyTwoOperatorsNum
+          });
         },
         calculateResult(number1, number2, operator) {
-          switch (operator) {
-            case '\u002b':
-              return number1 + number2;
-            case '\u2212':
-              return number1 - number2;
-            case '\u00D7':
-              return number1 * number2;
-            case '\u00F7':
-              return number1 / number2;
-          }
+          return CalculationGenerator.calculateResult(number1, number2, operator);
         }
       }
     });

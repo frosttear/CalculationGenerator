@@ -1,0 +1,26 @@
+{
+  "name": "calculationgenerator",
+  "version": "1.0.0",
+  "description": "## Introduction",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jest CalculationGenerator.test.js CalculationGenerator.integration.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frosttear/CalculationGenerator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frosttear/CalculationGenerator/issues"
+  },
+  "homepage": "https://github.com/frosttear/CalculationGenerator#readme",
+  "devDependencies": {
+    "jest": "^30.0.4"
+  }
+}
