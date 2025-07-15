@@ -1,42 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculation Practice</title>
+    <title data-l10n-key="appTitle"></title>
     <link rel="stylesheet" href="docs/styles.css">
+    <script src="docs/js/l10n.js" defer></script>
 </head>
 <body>
     <div class="container">
-        <h1>Calculation Practice</h1>
+        <h1 data-l10n-key="mainHeading"></h1>
+        <div class="language-switcher">
+            <span data-l10n-key="language"></span>:
+            <button id="lang-en" data-l10n-key="english"></button>
+            <button id="lang-zh" data-l10n-key="simplifiedChinese"></button>
+        </div>
         <div class="grid">
             <a href="docs/BasicCalculation.html" class="card">
-                <h3>Basic Calculation</h3>
-                <p>Addition and subtraction within 10.</p>
+                <h3 data-l10n-key="basicCalculationTitle"></h3>
+                <p data-l10n-key="basicCalculationDescription"></p>
             </a>
             <a href="docs/CalculationGenerator.html" class="card">
-                <h3>Calculation Generator</h3>
-                <p>Customizable math problems with various operators.</p>
+                <h3 data-l10n-key="calculationGeneratorTitle"></h3>
+                <p data-l10n-key="calculationGeneratorDescription"></p>
             </a>
             <a href="docs/CalculationGenerator2.html" class="card">
-                <h3>Calculation Generator 2</h3>
-                <p>Column-based math problem generator.</p>
+                <h3 data-l10n-key="calculationGenerator2Title"></h3>
+                <p data-l10n-key="calculationGenerator2Description"></p>
             </a>
             <a href="docs/VerticalEquations.html" class="card">
-                <h3>Vertical Equations</h3>
-                <p>Vertical addition and subtraction problems.</p>
+                <h3 data-l10n-key="verticalEquationsTitle"></h3>
+                <p data-l10n-key="verticalEquationsDescription"></p>
             </a>
             <a href="docs/RmbUnitTransformation.html" class="card">
-                <h3>RMB Unit Transformation</h3>
-                <p>Practice for Chinese currency unit conversions.</p>
+                <h3 data-l10n-key="rmbTransformationTitle"></h3>
+                <p data-l10n-key="rmbTransformationDescription"></p>
             </a>
             <a href="docs/TimeUnitTransformation.html" class="card">
-                <h3>Time Unit Transformation</h3>
-                <p>Practice for time unit conversions.</p>
+                <h3 data-l10n-key="timeTransformationTitle"></h3>
+                <p data-l10n-key="timeTransformationDescription"></p>
             </a>
             <a href="docs/MineSweeper.html" class="card">
-                <h3>Minesweeper</h3>
-                <p>The classic logic game.</p>
+                <h3 data-l10n-key="minesweeperTitle"></h3>
+                <p data-l10n-key="minesweeperDescription"></p>
             </a>
         </div>
     </div>

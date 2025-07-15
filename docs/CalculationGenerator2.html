@@ -4,10 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>口算天天练</title>
+  <title data-l10n-key="calculationGenerator2Title"></title>
   <!-- Vue.js CDN -->
   <script src="js/vue.min.js"></script>
   <link rel="stylesheet" href="styles.css">
+  <script src="js/l10n.js" defer></script>
   <style>
     .equation-column {
       float: left;
@@ -29,24 +30,24 @@
 </head>
 
 <body>
-  <a href="../index.html" class="back-link">Back to Home</a>
+  <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
 
   <div id="app">
-    <h1>口算天天练</h1>
+    <h1 data-l10n-key="calculationGenerator2Title"></h1>
     <div v-if="showInput">
-      <label for="rangeStart">数字大于等于:</label>
+      <label for="rangeStart" data-l10n-key="numberGreaterThanOrEqualTo"></label>
       <input type="number" id="rangeStart" v-model.number="rangeStart" />
-      <label for="rangeEnd">数字小于等于:</label>
+      <label for="rangeEnd" data-l10n-key="numberLessThanOrEqualTo"></label>
       <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
-      <label for="rowCount">行数:</label>
+      <label for="rowCount" data-l10n-key="rowCount"></label>
       <input type="number" id="rowCount" v-model.number="rowCount" />
-      <label for="columnCount">列数:</label>
+      <label for="columnCount" data-l10n-key="columnCount"></label>
       <input type="number" id="columnCount" v-model.number="columnCount" />
 
-      <label for="isTenContainedCheckBox">必须包含整十数</label>
+      <label for="isTenContainedCheckBox" data-l10n-key="mustContainTens"></label>
       <input type="checkbox" id="isTenContainedCheckBox" v-model="isTen" />
       <hr />
-      <label>包含的运算符号:</label>
+      <label data-l10n-key="operatorsIncluded"></label>
       <label for="plus">&#x002B</label>
       <input type="checkbox" id="plus" value="&#x002b" v-model="operators">
       <label for="minus">&#x2212</label>
@@ -56,10 +57,10 @@
       <label for="divide">&#x00F7</label>
       <input type="checkbox" id="divide" value="&#x00f7" v-model="operators">
       <hr />
-      <button @click="generateEquations">点击生成</button>
+      <button @click="generateEquations" data-l10n-key="generate"></button>
     </div>
     <div class="equation-column" v-for="(column, index) in columns" :key="index">
-      <h2>练习 {{ index + 1 }}</h2>
+      <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
       <ul>
         <li v-for="(equation, i) in column" :key="i">
           {{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }} = ____

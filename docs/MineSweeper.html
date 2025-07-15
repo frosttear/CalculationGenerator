@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue Minesweeper</title>
+    <title data-l10n-key="minesweeperTitle"></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,28 +42,29 @@
             margin-left: 10px;
         }
     </style>
+    <script src="js/l10n.js" defer></script>
 </head>
 <body>
-    <a href="../index.html" class="back-link">Back to Home</a>
+    <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
     <div id="app">
-        <h1>Minesweeper</h1>
+        <h1 data-l10n-key="minesweeperTitle"></h1>
 
         <div class="controls">
             <!-- Difficulty selection -->
-            <label for="difficulty">Difficulty: </label>
+            <label for="difficulty" data-l10n-key="difficulty"></label>
             <select id="difficulty" v-model="difficulty" @change="resetGame">
-                <option value="beginner">Beginner (9x9, 10 mines)</option>
-                <option value="intermediate">Intermediate (16x16, 40 mines)</option>
-                <option value="expert">Expert (30x16, 99 mines)</option>
+                <option value="beginner" data-l10n-key="beginner"></option>
+                <option value="intermediate" data-l10n-key="intermediate"></option>
+                <option value="expert" data-l10n-key="expert"></option>
             </select>
 
             <!-- Toggle for flagging mode -->
             <button id="flagMode" @click="toggleFlagMode">
-                {{ flagMode ? 'Flag Mode ON' : 'Flag Mode OFF' }}
+                {{ flagMode ? window.translate('flagModeOn') : window.translate('flagModeOff') }}
             </button>
         </div>
 
-        <button @click="resetGame">Restart Game</button>
+        <button @click="resetGame" data-l10n-key="restartGame"></button>
         
         <div class="grid" :style="{ gridTemplateColumns: 'repeat(' + cols + ', 30px)' }">
             <div v-for="(cell, index) in grid" 
@@ -72,13 +73,13 @@
                 @click="cellClicked(index)"
                 @contextmenu.prevent="flagCell(index)">
                 <span v-if="cell.revealed && !cell.mine">{{ cell.adjacentMines || '' }}</span>
-                <span v-if="cell.flagged && !win && !gameOver">🚩</span>
-                <span v-if="cell.mine && ((win || gameOver) || (cell.revealed && !cell.flagged))">💣</span>
+                <span v-if="cell.flagged && !win && !gameOver">{{ window.translate('flagEmoji') }}</span>
+                <span v-if="cell.mine && ((win || gameOver) || (cell.revealed && !cell.flagged))">{{ window.translate('bombEmoji') }}</span>
             </div>
         </div>
         
-        <p v-if="gameOver">Game Over! 💥</p>
-        <p v-if="win">You Win! 🎉</p>
+        <p v-if="gameOver" data-l10n-key="gameOver"></p>
+        <p v-if="win" data-l10n-key="youWin"></p>
     </div>
 
     <!-- Vue.js from unpkg (alternative CDN) -->

@@ -4,10 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>口算天天练</title>
+  <title data-l10n-key="calculationGeneratorTitle"></title>
   <!-- Vue.js CDN -->
   <script src="js/vue.min.js"></script>
   <link rel="stylesheet" href="styles.css">
+  <script src="js/l10n.js" defer></script>
   <style>
         table {
             margin-bottom: 0px;
@@ -38,24 +39,24 @@
 </head>
 
 <body>
-  <a href="../index.html" class="back-link">Back to Home</a>
+  <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
 
   <div id="app">
-    <h1>口算天天练</h1>
+    <h1 data-l10n-key="calculationGeneratorTitle"></h1>
     <div v-if="showInput">
-      <label for="rangeStart">数字范围:</label>
+      <label for="rangeStart" data-l10n-key="numberRange"></label>
       <input type="number" id="rangeStart" v-model.number="rangeStart" />
-      <label for="rangeEnd">到</label>
+      <label for="rangeEnd" data-l10n-key="to"></label>
       <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
-      <label for="rowsPerDay">每日行数:</label>
+      <label for="rowsPerPage" data-l10n-key="rowsPerDay"></label>
       <input type="number" id="rowsPerDay" v-model.number="rowsPerDay" />
-      <label for="colsPerDay">每日列数:</label>
+      <label for="colsPerPage" data-l10n-key="colsPerDay"></label>
       <input type="number" id="colsPerDay" v-model.number="colsPerDay" />
-      <label for="dailyTwoOperatorsNum">每日三数运算题数:</label>
+      <label for="dailyTwoOperatorsNum" data-l10n-key="dailyTwoOperatorsNum"></label>
       <input type="number" id="dailyTwoOperatorsNum" v-model.number="dailyTwoOperatorsNum" />
-      <label for="dayCount">天数:</label>
+      <label for="dayCount" data-l10n-key="dayCount"></label>
       <input type="number" id="dayCount" v-model.number="dayCount" />
-      <label>包含的运算符号:</label>
+      <label data-l10n-key="operatorsIncluded"></label>
       <label for="plus">&#x002B</label>
       <input type="checkbox" id="plus" value="+" v-model="operators">
       <label for="minus">&#x2212</label>
@@ -64,12 +65,12 @@
       <input type="checkbox" id="multiply" value="*" v-model="operators">
       <label for="divide">&#x00F7</label>
       <input type="checkbox" id="divide" value="/" v-model="operators">
-      <button @click="generateEquations">点击生成</button>
+      <button @click="generateEquations" data-l10n-key="generate"></button>
     </div>
     <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
     <div v-if="equationGroups.length > 0">
             <div v-for="(dayGroup, index) in equationGroups" :key="index">
-                <h2 class="header">练习 {{ index + 1 }} </h2>
+                <h2 class="header" data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></h2>
                 <table border="0">
                     <tr v-for="(row, rowIndex) in dayGroup" :key="rowIndex">
                         <td v-for="(equation, colIndex) in row" :key="colIndex" class="equation">
@@ -80,10 +81,10 @@
             </div>
         </div>
      <div style="page-break-after: always;"></div>
-     <h1>口算天天练 - 答案页</h1>
+     <h1><span data-l10n-key="answerPageTitle"></span></h1>
      <div v-if="equationGroups.length > 0">
             <div v-for="(dayGroup, index2) in equationGroups" :key="index2">
-                <h2 class="header">练习 {{ index2 + 1 }} </h2>
+                <h2 class="header" data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index2 + 1 })"></h2>
                 <table border="0">
                     <tr v-for="(row, rowIndex) in dayGroup" :key="rowIndex">
                         <td v-for="(equation, colIndex) in row" :key="colIndex" class="equation">
@@ -116,7 +117,7 @@
         generateEquations() {
           this.errorMessage = ''; // Clear previous errors
           if (this.operators.length === 0) {
-            this.errorMessage = '请至少选择一个运算符号。';
+            this.errorMessage = window.translate('selectAtLeastOneOperator');
             return;
           }
           this.showInput = false;
@@ -124,11 +125,13 @@
             rangeStart: this.rangeStart,
             rangeEnd: this.rangeEnd,
             dayCount: this.dayCount,
-            dailyNum: this.dailyNum,
             operators: this.operators,
             dailyTwoOperatorsNum: this.dailyTwoOperatorsNum,
             rowsPerDay: this.rowsPerDay,
             colsPerDay: this.colsPerDay
+          });
+          this.$nextTick(() => {
+            window.applyTranslations();
           });
         },
         calculateResult(number1, number2, operator) {

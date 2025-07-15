@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>口算天天练 - 竖式加减</title>
+  <title data-l10n-key="verticalEquationsTitle"></title>
   <script src="js/vue.min.js"></script>
   <link rel="stylesheet" href="styles.css">
+  <script src="js/l10n.js" defer></script>
   <style>
     #app {
       font-family: Arial, sans-serif;
@@ -52,9 +53,9 @@
   </style>
 </head>
 <body>
-  <a href="../index.html" class="back-link">Back to Home</a>
+  <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
   <div id="app">
-    <h1>口算天天练 - 竖式加减</h1>
+    <h1 data-l10n-key="verticalEquationsTitle"></h1>
     <div class="equations" v-for="(equationRow, index) in equationRows" :key="index">
       <div class="equation" v-for="equation in equationRow" :key="equation.id">
         <span class="number">
@@ -70,7 +71,7 @@
         <span v-else><span class="blank-square" ></span> <span class="blank-square" ></span>
       </div>
     </div>
-    <button style = "display:none" @click="toggleResult">{{ showResult ? 'Hide' : 'Show' }} Results</button>
+    <button style = "display:none" @click="toggleResult" data-l10n-key="toggleResults"></button>
   </div>
 
   <script>
