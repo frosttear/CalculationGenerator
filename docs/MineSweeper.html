@@ -60,7 +60,7 @@
 
             <!-- Toggle for flagging mode -->
             <button id="flagMode" @click="toggleFlagMode">
-                {{ flagMode ? window.translate('flagModeOn') : window.translate('flagModeOff') }}
+                {{ flagMode ? flagModeOnText : flagModeOffText }}
             </button>
         </div>
 
@@ -97,7 +97,9 @@
                     gameOver: false,
                     win: false,
                     difficulty: 'beginner',
-                    flagMode: false // New flagging mode toggle
+                    flagMode: false, // New flagging mode toggle
+                    flagModeOnText: '',
+                    flagModeOffText: ''
                 };
             },
             created() {
@@ -105,6 +107,8 @@
             },
             mounted() {
                 window.applyTranslations();
+                this.updateFlagModeButtonText();
+                document.addEventListener('translationsLoaded', this.updateFlagModeButtonText);
             },
             methods: {
                 resetGame() {
@@ -230,6 +234,10 @@
                     if (revealedCells.length === nonMineCells.length) {
                         this.win = true;
                     }
+                },
+                updateFlagModeButtonText() {
+                    this.flagModeOnText = window.translate('flagModeOn');
+                    this.flagModeOffText = window.translate('flagModeOff');
                 }
             }
         });

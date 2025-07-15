@@ -22,6 +22,7 @@ async function loadTranslations(lang) {
         }
         translations[lang] = await response.json();
         applyTranslations();
+        document.dispatchEvent(new CustomEvent('translationsLoaded'));
     } catch (error) {
         console.error(`Could not load translations for ${lang}:`, error);
     }
