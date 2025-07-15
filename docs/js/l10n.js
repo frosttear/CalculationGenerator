@@ -1,3 +1,19 @@
+
+const translations = {};
+let currentLanguage = 'zh'; // Default to Simplified Chinese
+
+// Determine the base path for the project, accounting for GitHub Pages project sites
+const getBasePath = () => {
+    const path = window.location.pathname;
+    const repoName = 'CalculationGenerator'; // Your repository name
+    if (path.includes(`/${repoName}/`)) {
+        return `/${repoName}/`;
+    }
+    return '/';
+};
+
+const basePath = getBasePath();
+
 async function loadTranslations(lang) {
     try {
         const response = await fetch(`${basePath}docs/locales/${lang}.json`);
