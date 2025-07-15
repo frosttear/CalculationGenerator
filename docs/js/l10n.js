@@ -61,6 +61,11 @@ function setLanguage(lang) {
     loadTranslations(lang);
 }
 
+// Expose translate function globally for dynamic content (e.g., Vue apps)
+window.translate = (key) => {
+    return (translations[currentLanguage] && translations[currentLanguage][key]) ? translations[currentLanguage][key] : key;
+};
+
 // Initialize language based on localStorage or default
 document.addEventListener('DOMContentLoaded', () => {
     const savedLanguage = localStorage.getItem('language');
@@ -73,8 +78,3 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('lang-en')?.addEventListener('click', () => setLanguage('en'));
     document.getElementById('lang-zh')?.addEventListener('click', () => setLanguage('zh'));
 });
-
-// Expose translate function globally for dynamic content (e.g., Vue apps)
-window.translate = (key) => {
-    return (translations[currentLanguage] && translations[currentLanguage][key]) ? translations[currentLanguage][key] : key;
-};

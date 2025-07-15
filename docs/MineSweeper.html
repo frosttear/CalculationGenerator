@@ -103,6 +103,9 @@
             created() {
                 this.resetGame();
             },
+            mounted() {
+                window.applyTranslations();
+            },
             methods: {
                 resetGame() {
                     this.setDifficulty();
