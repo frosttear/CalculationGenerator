@@ -50,3 +50,9 @@ h1 {
     margin-bottom: 20px;
     text-align: center;
 }
+
+@media print {
+    .back-link {
+        display: none;
+    }
+}
