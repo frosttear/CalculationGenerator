@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-l10n-key="lengthTransformationTitle"></title>
+    <script src="js/vue.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="js/l10n.js"></script>
+    <style>
+        .equation-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .equation-column {
+            flex: 1 1 auto; /* Allow columns to grow and shrink */
+            min-width: 150px; /* Minimum width to prevent squishing */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .equation-column ul {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+        }
+        .equation-column li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
+    <div id="app">
+        <h1 data-l10n-key="lengthTransformationTitle"></h1>
+
+        <div v-if="showInput">
+            <label for="rangeStart" data-l10n-key="numberGreaterThanOrEqualTo"></label>
+            <input type="number" id="rangeStart" v-model.number="rangeStart" />
+            <label for="rangeEnd" data-l10n-key="numberLessThanOrEqualTo"></label>
+            <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
+            <label for="rowCount" data-l10n-key="rowCount"></label>
+            <input type="number" id="rowCount" v-model.number="rowCount" />
+            <label for="columnCount" data-l10n-key="columnCount"></label>
+            <input type="number" id="columnCount" v-model.number="columnCount" />
+
+            <button @click="generateEquations" data-l10n-key="generate"></button>
+        </div>
+        <div class="equation-container">
+            <div class="equation-column" v-for="(column, index) in columns" :key="index" :style="{ width: (100 / columnCount) + '%' }">
+                <h2 data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></h2>
+                <ul>
+                    <li v-for="(equation, i) in column" :key="i">
+                        {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">____ {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    <div style="page-break-after: always;"></div>
+    <h1 data-l10n-key="answerPageTitle"></h1>
+    <div class="equation-container">
+        <div class="equation-column" v-for="(column, index) in columns" :key="index" :style="{ width: (100 / columnCount) + '%' }">
+            <h2 data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></h2>
+            <ul>
+                <li v-for="(equation, i) in column" :key="i">
+                    {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">{{ part.value }} {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                showInput: true,
+                rangeStart: 1,
+                rangeEnd: 1000,
+                rowCount: 20,
+                columnCount: 5,
+                columns: []
+            },
+            methods: {
+                generateEquations() {
+                    this.showInput = false;
+                    this.columns = [];
+                    const units = ['米', '分米', '厘米', '毫米', '千米'];
+                    const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+                    for (let c = 0; c < this.columnCount; c++) {
+                        const column = [];
+                        for (let i = 0; i < this.rowCount; i++) {
+                            let validEquationGenerated = false;
+                            let equation;
+                            while (!validEquationGenerated) {
+                                const unit = units[Math.floor(Math.random() * units.length)];
+                                let number = getRandomNumber(this.rangeStart, this.rangeEnd);
+
+                                const conversions = this.generateResult(number, unit);
+                                if (conversions.length > 0) {
+                                    equation = {
+                                        number: number,
+                                        numberUnit: unit,
+                                        result: conversions.join(" = "),
+                                    };
+                                    validEquationGenerated = true;
+                                }
+                            }
+                            column.push(equation);
+                        }
+                        this.columns.push(column);
+                    }
+                },
+                generateResult(num, unit) {
+                    let resultParts = [];
+                    const minVal = 1;
+                    const maxVal = 10000;
+
+                    if (unit === '米') {
+                        const decimeters = num * 10;
+                        const centimeters = num * 100;
+                        const millimeters = num * 1000;
+                        if (decimeters >= minVal && decimeters <= maxVal) {
+                            resultParts.push(`${decimeters} 分米`);
+                        }
+                        if (centimeters >= minVal && centimeters <= maxVal) {
+                            resultParts.push(`${centimeters} 厘米`);
+                        }
+                        if (millimeters >= minVal && millimeters <= maxVal) {
+                            resultParts.push(`${millimeters} 毫米`);
+                        }
+                    } else if (unit === '分米') {
+                        const meters = num / 10;
+                        const centimeters = num * 10;
+                        const millimeters = num * 100;
+                        if (meters >= minVal && meters <= maxVal && Number.isInteger(meters)) {
+                            resultParts.push(`${meters} 米`);
+                        }
+                        if (centimeters >= minVal && centimeters <= maxVal) {
+                            resultParts.push(`${centimeters} 厘米`);
+                        }
+                        if (millimeters >= minVal && millimeters <= maxVal) {
+                            resultParts.push(`${millimeters} 毫米`);
+                        }
+                    } else if (unit === '厘米') {
+                        const meters = num / 100;
+                        const decimeters = num / 10;
+                        const millimeters = num * 10;
+                        if (meters >= minVal && meters <= maxVal && Number.isInteger(meters)) {
+                            resultParts.push(`${meters} 米`);
+                        }
+                        if (decimeters >= minVal && decimeters <= maxVal && Number.isInteger(decimeters)) {
+                            resultParts.push(`${decimeters} 分米`);
+                        }
+                        if (millimeters >= minVal && millimeters <= maxVal) {
+                            resultParts.push(`${millimeters} 毫米`);
+                        }
+                    } else if (unit === '毫米') {
+                        const meters = num / 1000;
+                        const decimeters = num / 100;
+                        const centimeters = num / 10;
+                        if (meters >= minVal && meters <= maxVal && Number.isInteger(meters)) {
+                            resultParts.push(`${meters} 米`);
+                        }
+                        if (decimeters >= minVal && decimeters <= maxVal && Number.isInteger(decimeters)) {
+                            resultParts.push(`${decimeters} 分米`);
+                        }
+                        if (centimeters >= minVal && centimeters <= maxVal && Number.isInteger(centimeters)) {
+                            resultParts.push(`${centimeters} 厘米`);
+                        }
+                    } else if (unit === '千米') {
+                        const meters = num * 1000;
+                        const decimeters = num * 10000;
+                        if (meters >= minVal && meters <= maxVal) {
+                            resultParts.push(`${meters} 米`);
+                        }
+                        if (decimeters >= minVal && decimeters <= maxVal) {
+                            resultParts.push(`${decimeters} 分米`);
+                        }
+                    }
+                    return resultParts.join(" = ") || "无法转换";
+                }
+            }
+        });
+    </script>
+</body>
+</html>

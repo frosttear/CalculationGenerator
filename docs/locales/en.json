@@ -49,5 +49,9 @@
   "bombEmoji": "💣",
   "gameOver": "Game Over! 💥",
   "youWin": "You Win! 🎉",
-  "toggleResults": "Toggle Results"
+  "toggleResults": "Toggle Results",
+  "lengthTransformationTitle": "Length Unit Transformation",
+  "lengthTransformationDescription": "Practice for length unit conversions.",
+  "weightTransformationTitle": "Weight Unit Transformation",
+  "weightTransformationDescription": "Practice for weight unit conversions."
 }

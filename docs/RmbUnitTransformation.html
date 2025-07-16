@@ -8,30 +8,24 @@
     <link rel="stylesheet" href="styles.css">
     <script src="js/l10n.js" defer></script>
     <style>
-        table {
-            margin-bottom: 0px;
-            border-collapse: collapse;
+        .equation-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
         }
-
-        th {
-            text-align: left;
+        .equation-column {
+            flex: 1 1 auto; /* Allow columns to grow and shrink */
+            min-width: 150px; /* Minimum width to prevent squishing */
             padding: 10px;
-            font-weight: bold;
+            box-sizing: border-box;
         }
-
-        td {
-            padding: 5px 15px;
-            text-align: left;
+        .equation-column ul {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
         }
-
-        .header {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .equation {
-            min-width: 100px;
-            padding: 5px;
+        .equation-column li {
+            margin-bottom: 10px;
         }
     </style>
   </head>
@@ -44,26 +38,46 @@
         <input type="number" id="rangeStart" v-model.number="rangeStart" />
         <label for="rangeEnd" data-l10n-key="numberLessThanOrEqualTo"></label>
         <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
-        <label for="dailyCount" data-l10n-key="dailyProblems"></label>
+        <label for="rowCount" data-l10n-key="rowCount"></label>
         <input type="number" id="rowCount" v-model.number="rowCount" />
-        <label for="dayCount" data-l10n-key="dayCount"></label>
+        <label for="columnCount" data-l10n-key="columnCount"></label>
         <input type="number" id="columnCount" v-model.number="columnCount" />
 
         <button @click="generateEquations" data-l10n-key="generate"></button>
       </div>
-      <div
-        class="equation-column"
-        v-for="(column, index) in columns"
-        :key="index"
-      >
-        <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
-        <ul>
-          <li v-for="(equation, i) in column" :key="i">
-            {{ equation.number }} {{ equation.numberUnit }} = {{
-            equation.result}}
-          </li>
-        </ul>
-      </div>
+      <div id="app">
+        <div class="equation-container">
+          <div
+            class="equation-column"
+            v-for="(column, index) in columns"
+            :key="index"
+            :style="{ width: (100 / columnCount) + '%' }"
+          >
+            <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
+            <ul>
+              <li v-for="(equation, i) in column" :key="i">
+                {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">____ {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div style="page-break-after: always;"></div>
+        <h1 data-l10n-key="answerPageTitle"></h1>
+        <div class="equation-container">
+          <div
+            class="equation-column"
+            v-for="(column, index) in columns"
+            :key="index"
+            :style="{ width: (100 / columnCount) + '%' }"
+          >
+            <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
+            <ul>
+              <li v-for="(equation, i) in column" :key="i">
+                {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">{{ part.value }} {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       <script>
         new Vue({
           el: "#app",
@@ -80,54 +94,67 @@
               this.showInput = false;
               this.columns = [];
               const units = ["元", "角", "分"];
+              const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
               for (let c = 0; c < this.columnCount; c++) {
                 const column = [];
                 for (let i = 0; i < this.rowCount; i++) {
-                  const unit = units[Math.floor(Math.random() * units.length)];
-                  let number = 0; // Randomly generate number (1 - 1000)
-                  if (unit === "元") {
-                    number =
-                      Math.floor((Math.random() * this.rangeEnd) / 100) +
-                      this.rangeStart;
-                  }
-                  if (unit == "角") {
-                    number =
-                      Math.floor((Math.random() * this.rangeEnd) / 10) +
-                      this.rangeStart;
-                  }
-                  if (unit == "分") {
-                    number =
-                      Math.floor(Math.random() * this.rangeEnd) +
-                      this.rangeStart;
-                    if (number < 10) number += 10;
-                  }
+                  let validEquationGenerated = false;
+                  let equation;
+                  while (!validEquationGenerated) {
+                    const unit = units[Math.floor(Math.random() * units.length)];
+                    let number = getRandomNumber(this.rangeStart, this.rangeEnd);
 
-                  column.push({
-                    number: number,
-                    numberUnit: unit,
-                    result: this.generateResult(number, unit),
-                  });
+                    const conversions = this.generateResult(number, unit);
+                    if (conversions.length > 0) {
+                      equation = {
+                        number: number,
+                        numberUnit: unit,
+                        conversions: conversions,
+                      };
+                      validEquationGenerated = true;
+                    }
+                  }
+                  column.push(equation);
                 }
-
                 this.columns.push(column);
               }
             },
             generateResult(num, unit) {
-              let result = "";
-              switch (unit) {
-                case "元":
-                  return "______ 角 = _______分  ";
-                  break;
-                case "角":
-                  if (num >= 10) return "___元____角 = _______分";
-                  else return "_______分";
-                  break;
-                case "分":
-                  if (num >= 100) return "___元____角____分";
-                  else return "____角";
-                  break;
-              }
-            },
+                let resultParts = [];
+                const minVal = 1;
+                const maxVal = 10000;
+
+                if (unit === "元") {
+                    const jiao = num * 10;
+                    const fen = num * 100;
+                    if (jiao >= minVal && jiao <= maxVal) {
+                        resultParts.push({ value: jiao, unit: '角' });
+                    }
+                    if (fen >= minVal && fen <= maxVal) {
+                        resultParts.push({ value: fen, unit: '分' });
+                    }
+                } else if (unit === "角") {
+                    const yuan = num / 10;
+                    const fen = num * 10;
+                    if (yuan >= minVal && yuan <= maxVal && Number.isInteger(yuan)) {
+                        resultParts.push({ value: yuan, unit: '元' });
+                    }
+                    if (fen >= minVal && fen <= maxVal) {
+                        resultParts.push({ value: fen, unit: '分' });
+                    }
+                } else if (unit === "分") {
+                    const yuan = num / 100;
+                    const jiao = num / 10;
+                    if (yuan >= minVal && yuan <= maxVal && Number.isInteger(yuan)) {
+                        resultParts.push({ value: yuan, unit: '元' });
+                    }
+                    if (jiao >= minVal && jiao <= maxVal && Number.isInteger(jiao)) {
+                        resultParts.push({ value: jiao, unit: '角' });
+                    }
+                }
+                return resultParts;
+            }
           },
         });
       </script>
