@@ -55,4 +55,8 @@ h1 {
     .back-link {
         display: none;
     }
+
+    .no-print {
+        display: none;
+    }
 }

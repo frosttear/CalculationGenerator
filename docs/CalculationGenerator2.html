@@ -31,10 +31,9 @@
 
 <body>
   <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
-
   <div id="app">
     <h1 data-l10n-key="calculationGenerator2Title"></h1>
-    <div v-if="showInput">
+    <div class="no-print">
       <label for="rangeStart" data-l10n-key="numberGreaterThanOrEqualTo"></label>
       <input type="number" id="rangeStart" v-model.number="rangeStart" />
       <label for="rangeEnd" data-l10n-key="numberLessThanOrEqualTo"></label>

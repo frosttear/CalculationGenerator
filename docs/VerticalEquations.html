@@ -56,7 +56,7 @@
   <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
   <div id="app">
     <h1 data-l10n-key="verticalEquationsTitle"></h1>
-    <div class="equations" v-for="(equationRow, index) in equationRows" :key="index">
+    <div class="no-print">
       <div class="equation" v-for="equation in equationRow" :key="equation.id">
         <span class="number">
           <span v-for="char in equation.firstNumberStr" :key="char" class="number-square">{{char}}</span>

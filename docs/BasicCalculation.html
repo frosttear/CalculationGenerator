@@ -8,43 +8,68 @@
 <body>
     <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
     <h2 style="text-align:center" data-l10n-key="basicCalculationTitle"></h2>
-    <div class="container">
+    <div class="container no-print">
         <!-- 加法列 -->
         <div class="column">
             <h3 data-l10n-key="additionPractice"></h3>
-            <div class="column-inner">
-                <script>
-                    // 生成特殊排列的加法
-                    let addArr = [];
-                    for(let a=1; a<=4; a++){
-                        for(let b=a; b<=9 - a; b++){
-                            addArr.push(`${a} + ${b}`);
-                        }
-                    }
-		    addArr.sort(() => Math.random() - 0.5)
-                    addArr.forEach(eq => document.write(`<div class="equation">${eq} = </div>`));
-                </script>
+            <div class="column-inner" id="addition-column">
             </div>
         </div>
 
         <!-- 减法列 -->
         <div class="column">
             <h3 data-l10n-key="subtractionPractice"></h3>
-            <div class="column-inner">
-                <script>
-                    // 生成所有结果＞0的减法
-                    let subArr = [];
-                    for(let a=2; a<=9; a++){
-                        for(let b=1; b<a; b++){
-                            subArr.push(`${a} - ${b}`);
-                        }
-                    }
-                    subArr.sort(() => Math.random() - 0.5)
-
-                    subArr.forEach(eq => document.write(`<div class="equation">${eq} = </div>`));
-                </script>
+            <div class="column-inner" id="subtraction-column">
             </div>
         </div>
     </div>
+
+    <script>
+        let showRegenerateButton = false;
+
+        function generateAdditionEquations() {
+            let addArr = [];
+            for(let a=1; a<=4; a++){
+                for(let b=a; b<=9 - a; b++){
+                    addArr.push(`${a} + ${b}`);
+                }
+            }
+            addArr.sort(() => Math.random() - 0.5);
+            const additionColumn = document.getElementById('addition-column');
+            additionColumn.innerHTML = ''; // Clear previous content
+            addArr.forEach(eq => {
+                const div = document.createElement('div');
+                div.className = 'equation';
+                div.textContent = `${eq} = `;
+                additionColumn.appendChild(div);
+            });
+        }
+
+        function generateSubtractionEquations() {
+            let subArr = [];
+            for(let a=2; a<=9; a++){
+                for(let b=1; b<a; b++){
+                    subArr.push(`${a} - ${b}`);
+                }
+            }
+            subArr.sort(() => Math.random() - 0.5);
+            const subtractionColumn = document.getElementById('subtraction-column');
+            subtractionColumn.innerHTML = ''; // Clear previous content
+            subArr.forEach(eq => {
+                const div = document.createElement('div');
+                div.className = 'equation';
+                div.textContent = `${eq} = `;
+                subtractionColumn.appendChild(div);
+            });
+        }
+
+        function generateAllEquations() {
+            generateAdditionEquations();
+            generateSubtractionEquations();
+        }
+
+        // Initial generation on page load
+        document.addEventListener('DOMContentLoaded', generateAllEquations);
+    </script>
 </body>
 </html>
