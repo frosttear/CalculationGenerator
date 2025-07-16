@@ -45,6 +45,7 @@
       <input type="number" id="rowCount" v-model.number="rowCount" />
       <label for="columnCount" data-l10n-key="columnCount"></label>
       <input type="number" id="columnCount" v-model.number="columnCount" />
+      
 
       <button @click="generateEquations" data-l10n-key="generate"></button>
     </div>
@@ -53,7 +54,13 @@
         <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
         <ul>
           <li v-for="(equation, i) in column" :key="i">
-            {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">____ {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+            {{ equation.number }} {{ equation.numberUnit }} =
+            <span v-for="(conversion, convIndex) in equation.conversions" :key="convIndex">
+                <span v-for="(part, partIndex) in conversion" :key="partIndex">
+                    ____ {{ part.unit }}
+                </span>
+                <span v-if="convIndex < equation.conversions.length - 1"> = </span>
+            </span>
           </li>
         </ul>
       </div>
@@ -65,11 +72,18 @@
         <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
         <ul>
           <li v-for="(equation, i) in column" :key="i">
-            {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">{{ part.value }} {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+            {{ equation.number }} {{ equation.numberUnit }} =
+            <span v-for="(conversion, convIndex) in equation.conversions" :key="convIndex">
+                <span v-for="(part, partIndex) in conversion" :key="partIndex">
+                    {{ part.value }} {{ part.unit }}
+                </span>
+                <span v-if="convIndex < equation.conversions.length - 1"> = </span>
+            </span>
           </li>
         </ul>
       </div>
     </div>
+    <script src="js/UnitConverter.js"></script>
     <script>
       new Vue({
         el: '#app',
@@ -79,13 +93,15 @@
           rangeEnd: 10000,
           rowCount: 20,
           columnCount: 5,
-          columns: []
+          columns: [],
+          minVal: 1,
+          maxVal: 10000
         },
         methods: {
           generateEquations() {
             this.showInput = false;
             this.columns = [];
-            const units = ['小时', '分', '秒']; // Include '小时' for generation
+            const units = ['小时', '分', '秒'];
             const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
             for (let c = 0; c < this.columnCount; c++) {
@@ -97,7 +113,16 @@
                   const unit = units[Math.floor(Math.random() * units.length)];
                   let number = getRandomNumber(this.rangeStart, this.rangeEnd);
 
-                  const conversions = this.generateResult(number, unit);
+                  const usedUnits = new Set([unit]);
+                  const conversions = [];
+                  for (let j = 0; j < 1; j++) {
+                      const result = UnitConverter.generateResult(number, unit, usedUnits, { '小时': 3600, '分': 60, '秒': 1 }, ['小时', '分', '秒'], this.minVal, this.maxVal);
+                      if (result) {
+                          conversions.push(result.conversion);
+                          usedUnits.add(result.targetUnit);
+                      }
+                  }
+
                   if (conversions.length > 0) {
                     equation = {
                       number: number,
@@ -112,42 +137,6 @@
               this.columns.push(column);
             }
           },
-          generateResult(num, unit) {
-            let resultParts = [];
-            const minVal = 1;
-            const maxVal = 10000;
-
-            if (unit === '小时') {
-              const minutes = num * 60;
-              const seconds = num * 3600;
-              if (minutes >= minVal && minutes <= maxVal) {
-                resultParts.push({ value: minutes, unit: '分' });
-              }
-              if (seconds >= minVal && seconds <= maxVal) {
-                resultParts.push({ value: seconds, unit: '秒' });
-              }
-            } else if (unit === '分') {
-              const hours = num / 60;
-              const seconds = num * 60;
-              if (hours >= minVal && hours <= maxVal && Number.isInteger(hours)) {
-                resultParts.push({ value: hours, unit: '小时' });
-              }
-              if (seconds >= minVal && seconds <= maxVal) {
-                resultParts.push({ value: seconds, unit: '秒' });
-              }
-            } else if (unit === '秒') {
-              const minutes = num / 60;
-              const hours = num / 3600;
-              if (minutes >= minVal && minutes <= maxVal && Number.isInteger(minutes)) {
-                resultParts.push({ value: minutes, unit: '分' });
-              }
-              if (hours >= minVal && hours <= maxVal && Number.isInteger(hours)) {
-                resultParts.push({ value: hours, unit: '小时' });
-              }
-            }
-            return resultParts.slice(0, 3);
-          }
-
         }
       });
     </script>

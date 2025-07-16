@@ -43,8 +43,7 @@
             <input type="number" id="rowCount" v-model.number="rowCount" />
             <label for="columnCount" data-l10n-key="columnCount"></label>
             <input type="number" id="columnCount" v-model.number="columnCount" />
-            <label for="partsCount">Equation Length:</label>
-            <input type="number" id="partsCount" v-model.number="partsCount" />
+            
 
             <button @click="generateEquations" data-l10n-key="generate"></button>
         </div>
@@ -95,7 +94,6 @@
                 rangeEnd: 1000,
                 rowCount: 20,
                 columnCount: 5,
-                partsCount: 1,
                 columns: [],
                 minVal: 1,
                 maxVal: 10000
@@ -118,7 +116,7 @@
                                 
                                 const usedUnits = new Set([unit]);
                                 const conversions = [];
-                                for (let j = 0; j < this.partsCount; j++) {
+                                for (let j = 0; j < 1; j++) {
                                     const result = UnitConverter.generateResult(number, unit, usedUnits, { '吨': 1000000, '千克': 1000, '斤': 500, '克': 1 }, ['吨', '千克', '斤', '克'], this.minVal, this.maxVal);
                                     if (result) {
                                         conversions.push(result.conversion);

@@ -42,6 +42,7 @@
         <input type="number" id="rowCount" v-model.number="rowCount" />
         <label for="columnCount" data-l10n-key="columnCount"></label>
         <input type="number" id="columnCount" v-model.number="columnCount" />
+        
 
         <button @click="generateEquations" data-l10n-key="generate"></button>
       </div>
@@ -56,7 +57,13 @@
             <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
             <ul>
               <li v-for="(equation, i) in column" :key="i">
-                {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">____ {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+                {{ equation.number }} {{ equation.numberUnit }} =
+                <span v-for="(conversion, convIndex) in equation.conversions" :key="convIndex">
+                    <span v-for="(part, partIndex) in conversion" :key="partIndex">
+                        ____ {{ part.unit }}
+                    </span>
+                    <span v-if="convIndex < equation.conversions.length - 1"> = </span>
+                </span>
               </li>
             </ul>
           </div>
@@ -73,11 +80,18 @@
             <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
             <ul>
               <li v-for="(equation, i) in column" :key="i">
-                {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">{{ part.value }} {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+                {{ equation.number }} {{ equation.numberUnit }} =
+                <span v-for="(conversion, convIndex) in equation.conversions" :key="convIndex">
+                    <span v-for="(part, partIndex) in conversion" :key="partIndex">
+                        {{ part.value }} {{ part.unit }}
+                    </span>
+                    <span v-if="convIndex < equation.conversions.length - 1"> = </span>
+                </span>
               </li>
             </ul>
           </div>
         </div>
+      <script src="js/UnitConverter.js"></script>
       <script>
         new Vue({
           el: "#app",
@@ -88,6 +102,8 @@
             rowCount: 20,
             columnCount: 5,
             columns: [],
+            minVal: 1,
+            maxVal: 10000
           },
           methods: {
             generateEquations() {
@@ -105,7 +121,16 @@
                     const unit = units[Math.floor(Math.random() * units.length)];
                     let number = getRandomNumber(this.rangeStart, this.rangeEnd);
 
-                    const conversions = this.generateResult(number, unit);
+                    const usedUnits = new Set([unit]);
+                    const conversions = [];
+                    for (let j = 0; j < 1; j++) {
+                        const result = UnitConverter.generateResult(number, unit, usedUnits, { '元': 100, '角': 10, '分': 1 }, ['元', '角', '分'], this.minVal, this.maxVal);
+                        if (result) {
+                            conversions.push(result.conversion);
+                            usedUnits.add(result.targetUnit);
+                        }
+                    }
+
                     if (conversions.length > 0) {
                       equation = {
                         number: number,
@@ -120,41 +145,6 @@
                 this.columns.push(column);
               }
             },
-            generateResult(num, unit) {
-                let resultParts = [];
-                const minVal = 1;
-                const maxVal = 10000;
-
-                if (unit === "元") {
-                    const jiao = num * 10;
-                    const fen = num * 100;
-                    if (jiao >= minVal && jiao <= maxVal) {
-                        resultParts.push({ value: jiao, unit: '角' });
-                    }
-                    if (fen >= minVal && fen <= maxVal) {
-                        resultParts.push({ value: fen, unit: '分' });
-                    }
-                } else if (unit === "角") {
-                    const yuan = num / 10;
-                    const fen = num * 10;
-                    if (yuan >= minVal && yuan <= maxVal && Number.isInteger(yuan)) {
-                        resultParts.push({ value: yuan, unit: '元' });
-                    }
-                    if (fen >= minVal && fen <= maxVal) {
-                        resultParts.push({ value: fen, unit: '分' });
-                    }
-                } else if (unit === "分") {
-                    const yuan = num / 100;
-                    const jiao = num / 10;
-                    if (yuan >= minVal && yuan <= maxVal && Number.isInteger(yuan)) {
-                        resultParts.push({ value: yuan, unit: '元' });
-                    }
-                    if (jiao >= minVal && jiao <= maxVal && Number.isInteger(jiao)) {
-                        resultParts.push({ value: jiao, unit: '角' });
-                    }
-                }
-                return resultParts.slice(0, 3);
-            }
           },
         });
       </script>

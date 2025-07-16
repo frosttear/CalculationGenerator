@@ -38,4 +38,44 @@ describe('UnitConverter', () => {
             expect(result.conversion).toEqual([{ value: 1000, unit: '千克' }]);
         });
     });
+
+    describe('RMB Units', () => {
+        const unitsInFen = { '元': 100, '角': 10, '分': 1 };
+        const unitNames = ['元', '角', '分'];
+
+        test('should correctly convert yuan to fen', () => {
+            const result = UnitConverter.generateResult(1, '元', new Set(['元']), unitsInFen, unitNames, minVal, maxVal, '分');
+            expect(result.conversion).toEqual([{ value: 100, unit: '分' }]);
+        });
+
+        test('should correctly convert jiao to fen', () => {
+            const result = UnitConverter.generateResult(5, '角', new Set(['角']), unitsInFen, unitNames, minVal, maxVal, '分');
+            expect(result.conversion).toEqual([{ value: 50, unit: '分' }]);
+        });
+
+        test('should correctly convert fen to jiao and yuan', () => {
+            const result = UnitConverter.generateResult(123, '分', new Set(['分']), unitsInFen, unitNames, minVal, maxVal, '元');
+            expect(result.conversion).toEqual([{ value: 1, unit: '元' }, { value: 2, unit: '角' }, { value: 3, unit: '分' }]);
+        });
+    });
+
+    describe('Time Units', () => {
+        const unitsInSeconds = { '小时': 3600, '分': 60, '秒': 1 };
+        const unitNames = ['小时', '分', '秒'];
+
+        test('should correctly convert hours to seconds', () => {
+            const result = UnitConverter.generateResult(1, '小时', new Set(['小时']), unitsInSeconds, unitNames, minVal, maxVal, '秒');
+            expect(result.conversion).toEqual([{ value: 3600, unit: '秒' }]);
+        });
+
+        test('should correctly convert minutes to seconds', () => {
+            const result = UnitConverter.generateResult(5, '分', new Set(['分']), unitsInSeconds, unitNames, minVal, maxVal, '秒');
+            expect(result.conversion).toEqual([{ value: 300, unit: '秒' }]);
+        });
+
+        test('should correctly convert seconds to minutes and hours', () => {
+            const result = UnitConverter.generateResult(3665, '秒', new Set(['秒']), unitsInSeconds, unitNames, minVal, maxVal, '小时');
+            expect(result.conversion).toEqual([{ value: 1, unit: '小时' }, { value: 1, unit: '分' }, { value: 5, unit: '秒' }]);
+        });
+    });
 });
