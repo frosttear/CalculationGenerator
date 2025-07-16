@@ -27,6 +27,8 @@ All pages can be accessed from the main [`docs/index.html`](./docs/index.html) p
 *   **[Vertical Equations](./docs/VerticalEquations.html):** Focuses on two-digit vertical (columnar) addition and subtraction.
 *   **[RMB Unit Transformation](./docs/RmbUnitTransformation.html):** Practice converting between Chinese currency units: Yuan (元), Jiao (角), and Fen (分).
 *   **[Time Unit Transformation](./docs/TimeUnitTransformation.html):** Practice converting between time units: Hours, Minutes, and Seconds.
+*   **[Length Unit Transformation](./docs/LengthUnitTransformation.html):** Practice converting between length units: Kilometers, Meters, Decimeters, Centimeters, and Millimeters.
+*   **[Weight Unit Transformation](./docs/WeightUnitTransformation.html):** Practice converting between weight units: Tons, Kilograms, Jin, and Grams.
 *   **[Minesweeper](./docs/MineSweeper.html):** The classic logic puzzle game.
 
 ## Getting Started
