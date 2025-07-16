@@ -43,6 +43,8 @@
             <input type="number" id="rowCount" v-model.number="rowCount" />
             <label for="columnCount" data-l10n-key="columnCount"></label>
             <input type="number" id="columnCount" v-model.number="columnCount" />
+            <label for="partsCount">Equation Length:</label>
+            <input type="number" id="partsCount" v-model.number="partsCount" />
 
             <button @click="generateEquations" data-l10n-key="generate"></button>
         </div>
@@ -51,7 +53,13 @@
                 <h2 data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></h2>
                 <ul>
                     <li v-for="(equation, i) in column" :key="i">
-                        {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">____ {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+                        {{ equation.number }} {{ equation.numberUnit }} =
+                        <span v-for="(conversion, convIndex) in equation.conversions" :key="convIndex">
+                            <span v-for="(part, partIndex) in conversion" :key="partIndex">
+                                ____ {{ part.unit }}
+                            </span>
+                            <span v-if="convIndex < equation.conversions.length - 1"> = </span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -64,12 +72,20 @@
             <h2 data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></h2>
             <ul>
                 <li v-for="(equation, i) in column" :key="i">
-                    {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">{{ part.value }} {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+                    {{ equation.number }} {{ equation.numberUnit }} =
+                    <span v-for="(conversion, convIndex) in equation.conversions" :key="convIndex">
+                        <span v-for="(part, partIndex) in conversion" :key="partIndex">
+                            {{ part.value }} {{ part.unit }}
+                        </span>
+                        <span v-if="convIndex < equation.conversions.length - 1"> = </span>
+                    </span>
                 </li>
             </ul>
         </div>
     </div>
 
+    <script src="js/UnitConverter.js"></script>
+    <script src="js/UnitConverter.js"></script>
     <script>
         new Vue({
             el: '#app',
@@ -79,7 +95,10 @@
                 rangeEnd: 1000,
                 rowCount: 20,
                 columnCount: 5,
-                columns: []
+                partsCount: 1,
+                columns: [],
+                minVal: 1,
+                maxVal: 10000
             },
             methods: {
                 generateEquations() {
@@ -96,8 +115,17 @@
                             while (!validEquationGenerated) {
                                 const unit = units[Math.floor(Math.random() * units.length)];
                                 let number = getRandomNumber(this.rangeStart, this.rangeEnd);
+                                
+                                const usedUnits = new Set([unit]);
+                                const conversions = [];
+                                for (let j = 0; j < this.partsCount; j++) {
+                                    const result = UnitConverter.generateResult(number, unit, usedUnits, { '千米': 1000000, '米': 1000, '分米': 100, '厘米': 10, '毫米': 1 }, ['千米', '米', '分米', '厘米', '毫米'], this.minVal, this.maxVal);
+                                    if (result) {
+                                        conversions.push(result.conversion);
+                                        usedUnits.add(result.targetUnit);
+                                    }
+                                }
 
-                                const conversions = this.generateResult(number, unit);
                                 if (conversions.length > 0) {
                                     equation = {
                                         number: number,
@@ -111,75 +139,6 @@
                         }
                         this.columns.push(column);
                     }
-                },
-                generateResult(num, unit) {
-                    let resultParts = [];
-                    const minVal = 1;
-                    const maxVal = 10000;
-
-                    if (unit === '米') {
-                        const decimeters = num * 10;
-                        const centimeters = num * 100;
-                        const millimeters = num * 1000;
-                        if (decimeters >= minVal && decimeters <= maxVal) {
-                            resultParts.push(`${decimeters} 分米`);
-                        }
-                        if (centimeters >= minVal && centimeters <= maxVal) {
-                            resultParts.push(`${centimeters} 厘米`);
-                        }
-                        if (millimeters >= minVal && millimeters <= maxVal) {
-                            resultParts.push(`${millimeters} 毫米`);
-                        }
-                    } else if (unit === '分米') {
-                        const meters = num / 10;
-                        const centimeters = num * 10;
-                        const millimeters = num * 100;
-                        if (meters >= minVal && meters <= maxVal && Number.isInteger(meters)) {
-                            resultParts.push(`${meters} 米`);
-                        }
-                        if (centimeters >= minVal && centimeters <= maxVal) {
-                            resultParts.push(`${centimeters} 厘米`);
-                        }
-                        if (millimeters >= minVal && millimeters <= maxVal) {
-                            resultParts.push(`${millimeters} 毫米`);
-                        }
-                    } else if (unit === '厘米') {
-                        const meters = num / 100;
-                        const decimeters = num / 10;
-                        const millimeters = num * 10;
-                        if (meters >= minVal && meters <= maxVal && Number.isInteger(meters)) {
-                            resultParts.push(`${meters} 米`);
-                        }
-                        if (decimeters >= minVal && decimeters <= maxVal && Number.isInteger(decimeters)) {
-                            resultParts.push(`${decimeters} 分米`);
-                        }
-                        if (millimeters >= minVal && millimeters <= maxVal) {
-                            resultParts.push(`${millimeters} 毫米`);
-                        }
-                    } else if (unit === '毫米') {
-                        const meters = num / 1000;
-                        const decimeters = num / 100;
-                        const centimeters = num / 10;
-                        if (meters >= minVal && meters <= maxVal && Number.isInteger(meters)) {
-                            resultParts.push(`${meters} 米`);
-                        }
-                        if (decimeters >= minVal && decimeters <= maxVal && Number.isInteger(decimeters)) {
-                            resultParts.push(`${decimeters} 分米`);
-                        }
-                        if (centimeters >= minVal && centimeters <= maxVal && Number.isInteger(centimeters)) {
-                            resultParts.push(`${centimeters} 厘米`);
-                        }
-                    } else if (unit === '千米') {
-                        const meters = num * 1000;
-                        const decimeters = num * 10000;
-                        if (meters >= minVal && meters <= maxVal) {
-                            resultParts.push(`${meters} 米`);
-                        }
-                        if (decimeters >= minVal && decimeters <= maxVal) {
-                            resultParts.push(`${decimeters} 分米`);
-                        }
-                    }
-                    return resultParts.join(" = ") || "无法转换";
                 }
             }
         });

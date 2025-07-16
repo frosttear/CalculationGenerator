@@ -43,6 +43,8 @@
             <input type="number" id="rowCount" v-model.number="rowCount" />
             <label for="columnCount" data-l10n-key="columnCount"></label>
             <input type="number" id="columnCount" v-model.number="columnCount" />
+            <label for="partsCount">Equation Length:</label>
+            <input type="number" id="partsCount" v-model.number="partsCount" />
 
             <button @click="generateEquations" data-l10n-key="generate"></button>
         </div>
@@ -51,7 +53,13 @@
                 <h2 data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></h2>
                 <ul>
                     <li v-for="(equation, i) in column" :key="i">
-                        {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">____ {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+                        {{ equation.number }} {{ equation.numberUnit }} =
+                        <span v-for="(conversion, convIndex) in equation.conversions" :key="convIndex">
+                            <span v-for="(part, partIndex) in conversion" :key="partIndex">
+                                ____ {{ part.unit }}
+                            </span>
+                            <span v-if="convIndex < equation.conversions.length - 1"> = </span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -64,13 +72,20 @@
             <h2 data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></h2>
             <ul>
                 <li v-for="(equation, i) in column" :key="i">
-                    {{ equation.number }} {{ equation.numberUnit }} = <span v-for="(part, partIndex) in equation.conversions" :key="partIndex">{{ part.value }} {{ part.unit }} {{ partIndex < equation.conversions.length - 1 ? ' = ' : '' }}</span>
+                    {{ equation.number }} {{ equation.numberUnit }} =
+                    <span v-for="(conversion, convIndex) in equation.conversions" :key="convIndex">
+                        <span v-for="(part, partIndex) in conversion" :key="partIndex">
+                            {{ part.value }} {{ part.unit }}
+                        </span>
+                        <span v-if="convIndex < equation.conversions.length - 1"> = </span>
+                    </span>
                 </li>
             </ul>
         </div>
     </div>
-    </div>
 
+    <script src="js/UnitConverter.js"></script>
+    <script src="js/UnitConverter.js"></script>
     <script>
         new Vue({
             el: '#app',
@@ -80,13 +95,16 @@
                 rangeEnd: 1000,
                 rowCount: 20,
                 columnCount: 5,
-                columns: []
+                partsCount: 1,
+                columns: [],
+                minVal: 1,
+                maxVal: 10000
             },
             methods: {
                 generateEquations() {
                     this.showInput = false;
                     this.columns = [];
-                    const units = ['千克', '克', '吨', '斤'];
+                    const units = ['吨', '千克', '斤', '克'];
                     const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
                     for (let c = 0; c < this.columnCount; c++) {
@@ -97,8 +115,17 @@
                             while (!validEquationGenerated) {
                                 const unit = units[Math.floor(Math.random() * units.length)];
                                 let number = getRandomNumber(this.rangeStart, this.rangeEnd);
+                                
+                                const usedUnits = new Set([unit]);
+                                const conversions = [];
+                                for (let j = 0; j < this.partsCount; j++) {
+                                    const result = UnitConverter.generateResult(number, unit, usedUnits, { '吨': 1000000, '千克': 1000, '斤': 500, '克': 1 }, ['吨', '千克', '斤', '克'], this.minVal, this.maxVal);
+                                    if (result) {
+                                        conversions.push(result.conversion);
+                                        usedUnits.add(result.targetUnit);
+                                    }
+                                }
 
-                                const conversions = this.generateResult(number, unit);
                                 if (conversions.length > 0) {
                                     equation = {
                                         number: number,
@@ -112,50 +139,6 @@
                         }
                         this.columns.push(column);
                     }
-                },
-                generateResult(num, unit) {
-                    let resultParts = [];
-                    const minVal = 1;
-                    const maxVal = 10000;
-
-                    if (unit === '千克') {
-                        const gram = num * 1000;
-                        const jin = num * 2; // 1千克 = 2斤
-                        if (gram >= minVal && gram <= maxVal) {
-                            resultParts.push(`${gram} 克`);
-                        }
-                        if (jin >= minVal && jin <= maxVal) {
-                            resultParts.push(`${jin} 斤`);
-                        }
-                    } else if (unit === '克') {
-                        const kilogram = num / 1000;
-                        const jin = num / 500; // 1斤 = 500克
-                        if (kilogram >= minVal && kilogram <= maxVal && Number.isInteger(kilogram)) {
-                            resultParts.push(`${kilogram} 千克`);
-                        }
-                        if (jin >= minVal && jin <= maxVal && Number.isInteger(jin)) {
-                            resultParts.push(`${jin} 斤`);
-                        }
-                    } else if (unit === '吨') {
-                        const kilogram = num * 1000;
-                        const jin = num * 2000; // 1吨 = 1000千克 = 2000斤
-                        if (kilogram >= minVal && kilogram <= maxVal) {
-                            resultParts.push(`${kilogram} 千克`);
-                        }
-                        if (jin >= minVal && jin <= maxVal) {
-                            resultParts.push(`${jin} 斤`);
-                        }
-                    } else if (unit === '斤') {
-                        const kilogram = num / 2; // 1千克 = 2斤
-                        const gram = num * 500; // 1斤 = 500克
-                        if (kilogram >= minVal && kilogram <= maxVal && Number.isInteger(kilogram)) {
-                            resultParts.push(`${kilogram} 千克`);
-                        }
-                        if (gram >= minVal && gram <= maxVal) {
-                            resultParts.push(`${gram} 克`);
-                        }
-                    }
-                    return resultParts.join(" = ") || "无法转换";
                 }
             }
         });

@@ -70,7 +70,7 @@
 
         <button @click="resetGame" data-l10n-key="restartGame"></button>
         
-        <div class="grid minesweeper-grid" :style="{ gridTemplateColumns: 'repeat(' + cols + ', 30px)' }">
+        <div class="minesweeper-grid" :style="{ display: 'grid', gridTemplateColumns: 'repeat(' + cols + ', 30px)' }">
             <div v-for="(cell, index) in grid" 
                 :key="index"
                 :class="['cell', { revealed: cell.revealed, mine: cell.mine && cell.revealed, flagged: cell.flagged }]" 
