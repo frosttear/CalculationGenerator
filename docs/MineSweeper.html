@@ -10,6 +10,7 @@
         }
         .grid {
             display: grid;
+            gap: 0;
         }
         .cell {
             width: 30px;
@@ -19,12 +20,13 @@
             line-height: 30px;
             cursor: pointer;
             user-select: none;
-            border: 1px solid #999; /* Add border to create grid lines */
+            border: 1px solid #666; /* Revert to 1px border, using #666 */
             box-sizing: border-box;  /* Include border in the cell's dimensions */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add 3D effect */
         }
         .cell.revealed {
             background-color: #eee;
-            border-color: #bbb; /* Lighter border for revealed cells */
+            border-color: #bbb; /* Revert to original revealed border color */
         }
         .cell.mine {
             background-color: red;
