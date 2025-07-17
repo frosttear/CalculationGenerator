@@ -8,7 +8,7 @@
 <body>
     <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
     <h2 style="text-align:center" data-l10n-key="basicCalculationTitle"></h2>
-    <div class="container no-print">
+    <div class="container input-area no-print">
         <!-- 加法列 -->
         <div class="column">
             <h3 data-l10n-key="additionPractice"></h3>
@@ -22,6 +22,7 @@
             <div class="column-inner" id="subtraction-column">
             </div>
         </div>
+        <button @click="generateAllEquations" data-l10n-key="generate" class="generate-button"></button>
     </div>
 
     <script>

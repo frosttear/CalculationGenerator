@@ -67,6 +67,37 @@ h1 {
         background-color: #45a049;
     }
 
+    .input-area {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .input-area label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .input-area input[type="number"],
+    .input-area select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .input-area button {
+        margin-top: 10px;
+    }
+
 @media print {
     .back-link {
         display: none;

@@ -34,7 +34,7 @@
     <div id="app">
         <h1 data-l10n-key="lengthTransformationTitle"></h1>
 
-        <div class="no-print">
+        <div class="no-print input-area">
             <label for="rangeStart" data-l10n-key="numberGreaterThanOrEqualTo"></label>
             <input type="number" id="rangeStart" v-model.number="rangeStart" />
             <label for="rangeEnd" data-l10n-key="numberLessThanOrEqualTo"></label>
@@ -45,7 +45,7 @@
             <input type="number" id="columnCount" v-model.number="columnCount" />
             
 
-            <button @click="generateEquations" data-l10n-key="generate"></button>
+            <button @click="generateEquations" data-l10n-key="generate" class="generate-button"></button>
         </div>
         <div class="equation-container">
             <div class="equation-column" v-for="(column, index) in columns" :key="index" :style="{ width: (100 / columnCount) + '%' }">
