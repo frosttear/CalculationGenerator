@@ -51,6 +51,22 @@ h1 {
     text-align: center;
 }
 
+    .generate-button {
+        padding: 15px 30px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .generate-button:hover {
+        background-color: #45a049;
+    }
+
 @media print {
     .back-link {
         display: none;
@@ -58,21 +74,5 @@ h1 {
 
     .no-print {
         display: none;
-    }
-
-    .generate-button {
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .generate-button:hover {
-        background-color: #45a049;
     }
 }
