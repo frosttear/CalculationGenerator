@@ -59,4 +59,20 @@ h1 {
     .no-print {
         display: none;
     }
+
+    .generate-button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .generate-button:hover {
+        background-color: #45a049;
+    }
 }
