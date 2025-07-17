@@ -69,8 +69,8 @@
             </div>
         </div>
         
-        <p v-if="gameOver" data-l10n-key="gameOver"></p>
-        <p v-if="win" data-l10n-key="youWin"></p>
+        <h2 v-if="gameOver" style="color: red; text-align: center; font-size: 2em;">{{ window.translate('gameOver') }}</h2>
+        <h2 v-if="win" style="color: green; text-align: center; font-size: 2em;">{{ window.translate('youWin') }}</h2>
     </div>
 
     <!-- Vue.js from unpkg (alternative CDN) -->
