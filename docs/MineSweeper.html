@@ -8,9 +8,6 @@
         body {
             font-family: Arial, sans-serif;
         }
-        .grid {
-            display: grid;
-        }
         .minesweeper-grid {
             gap: 0;
         }
@@ -36,15 +33,6 @@
         .cell.flagged {
             background-color: yellow;
         }
-        .controls {
-            display: flex;
-            justify-content: left;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        #flagMode {
-            margin-left: 10px;
-        }
     </style>
     <script src="js/l10n.js"></script>
 </head>
@@ -53,22 +41,21 @@
     <div id="app">
         <h1 data-l10n-key="minesweeperTitle"></h1>
 
-        <div class="controls">
+        <div class="minesweeper-controls no-print">
             <!-- Difficulty selection -->
             <label for="difficulty" data-l10n-key="difficulty"></label>
-            <select id="difficulty" v-model="difficulty" @change="resetGame">
+            <select id="difficulty" v-model="difficulty" @change="resetGame" class="minesweeper-select">
                 <option value="beginner" data-l10n-key="beginner"></option>
                 <option value="intermediate" data-l10n-key="intermediate"></option>
                 <option value="expert" data-l10n-key="expert"></option>
             </select>
 
             <!-- Toggle for flagging mode -->
-            <button id="flagMode" @click="toggleFlagMode">
+            <button id="flagMode" @click="toggleFlagMode" class="minesweeper-button">
                 {{ flagMode ? flagModeOnText : flagModeOffText }}
             </button>
+            <button @click="resetGame" data-l10n-key="restartGame" class="minesweeper-button"></button>
         </div>
-
-        <button @click="resetGame" data-l10n-key="restartGame"></button>
         
         <div class="minesweeper-grid" :style="{ display: 'grid', gridTemplateColumns: 'repeat(' + cols + ', 30px)' }">
             <div v-for="(cell, index) in grid" 
