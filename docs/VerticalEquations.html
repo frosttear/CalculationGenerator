@@ -116,6 +116,7 @@
           return equations;
         },
         generateEquationRows() {
+          this.equationRows = []; // Clear existing equations
           for (let i = 0; i < this.numRows; i++) {
             this.equationRows.push(this.generateEquations());
           }
