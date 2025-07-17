@@ -56,14 +56,16 @@
       <label for="dayCount" data-l10n-key="dayCount"></label>
       <input type="number" id="dayCount" v-model.number="dayCount" />
       <label data-l10n-key="operatorsIncluded"></label>
-      <label for="plus">&#x002B</label>
-      <input type="checkbox" id="plus" value="+" v-model="operators">
-      <label for="minus">&#x2212</label>
-      <input type="checkbox" id="minus" value="-" v-model="operators">
-      <label for="multiply">&#x00D7</label>
-      <input type="checkbox" id="multiply" value="*" v-model="operators">
-      <label for="divide">&#x00F7</label>
-      <input type="checkbox" id="divide" value="/" v-model="operators">
+      <div class="operator-group">
+        <label for="plus">&#x002B</label>
+        <input type="checkbox" id="plus" value="+" v-model="operators">
+        <label for="minus">&#x2212</label>
+        <input type="checkbox" id="minus" value="-" v-model="operators">
+        <label for="multiply">&#x00D7</label>
+        <input type="checkbox" id="multiply" value="*" v-model="operators">
+        <label for="divide">&#x00F7</label>
+        <input type="checkbox" id="divide" value="/" v-model="operators">
+      </div>
       <button @click="generateEquations" data-l10n-key="generate" class="generate-button"></button>
     </div>
     <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
