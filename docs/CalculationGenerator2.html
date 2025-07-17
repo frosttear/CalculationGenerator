@@ -34,30 +34,33 @@
   <div id="app">
     <h1 data-l10n-key="calculationGenerator2Title"></h1>
     <div class="no-print input-area">
-      <div class="input-group">
+      <div class="input-group" style="display: flex; align-items: center; gap: 10px;">
         <label for="rangeStart" data-l10n-key="numberGreaterThanOrEqualTo"></label>
-        <input type="number" id="rangeStart" v-model.number="rangeStart" />
+        <input type="number" id="rangeStart" v-model.number="rangeStart" style="width: 60px;"/>
         <label for="rangeEnd" data-l10n-key="numberLessThanOrEqualTo"></label>
-        <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
+        <input type="number" id="rangeEnd" v-model.number="rangeEnd" style="width: 60px;"/>
       </div>
-      <label for="rowCount" data-l10n-key="rowCount"></label>
-      <input type="number" id="rowCount" v-model.number="rowCount" />
-      <label for="columnCount" data-l10n-key="columnCount"></label>
-      <input type="number" id="columnCount" v-model.number="columnCount" />
-
-      <label for="isTenContainedCheckBox" data-l10n-key="mustContainTens"></label>
-      <input type="checkbox" id="isTenContainedCheckBox" v-model="isTen" />
-      <hr />
-      <label data-l10n-key="operatorsIncluded"></label>
-      <label for="plus">&#x002B</label>
-      <input type="checkbox" id="plus" value="&#x002b" v-model="operators">
-      <label for="minus">&#x2212</label>
-      <input type="checkbox" id="minus" value="&#x2212" v-model="operators">
-      <label for="multiply">&#x00D7</label>
-      <input type="checkbox" id="multiply" value="&#x00d7" v-model="operators">
-      <label for="divide">&#x00F7</label>
-      <input type="checkbox" id="divide" value="&#x00f7" v-model="operators">
-      <hr />
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="rowCount" data-l10n-key="rowCount"></label>
+        <input type="number" id="rowCount" v-model.number="rowCount" style="width: 60px;"/>
+        <label for="columnCount" data-l10n-key="columnCount"></label>
+        <input type="number" id="columnCount" v-model.number="columnCount" style="width: 60px;"/>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="mustContainTensForAdditionSubtraction" data-l10n-key="mustContainTensDescription"></label>
+        <input type="checkbox" id="mustContainTensForAdditionSubtraction" v-model="isTen" />
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label data-l10n-key="operatorsIncluded"></label>
+        <label for="plus">&#x002B</label>
+        <input type="checkbox" id="plus" value="&#x002b" v-model="operators">
+        <label for="minus">&#x2212</label>
+        <input type="checkbox" id="minus" value="&#x2212" v-model="operators">
+        <label for="multiply">&#x00D7</label>
+        <input type="checkbox" id="multiply" value="&#x00d7" v-model="operators">
+        <label for="divide">&#x00F7</label>
+        <input type="checkbox" id="divide" value="&#x00f7" v-model="operators">
+      </div>
       <button @click="generateEquations" data-l10n-key="generate" class="generate-button"></button>
     </div>
     <div class="equation-column" v-for="(column, index) in columns" :key="index">
@@ -80,7 +83,7 @@
         rowCount: 20,
         columnCount: 5,
         operators: ['\u002b', '\u2212'],
-        isTen: true,
+        isTen: true, // This setting only applies to addition and subtraction operations.
         columns: []
       },
       methods: {

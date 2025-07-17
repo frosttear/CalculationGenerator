@@ -37,7 +37,7 @@
   "dailyProblems": "Daily problems:",
   "rowCount": "Rows:",
   "columnCount": "Columns:",
-  "mustContainTens": "Must contain tens",
+  "mustContainTensDescription": "Must contain tens (applies to + and - only)",
   "difficulty": "Difficulty:",
   "beginner": "Beginner (9x9, 10 mines)",
   "intermediate": "Intermediate (16x16, 40 mines)",
