@@ -57,6 +57,9 @@
   <div id="app">
     <h1 data-l10n-key="verticalEquationsTitle"></h1>
     <div class="no-print">
+      <button @click="generateEquationRows" data-l10n-key="generate"></button>
+    </div>
+    <div class="equations" v-for="(equationRow, index) in equationRows" :key="index">
       <div class="equation" v-for="equation in equationRow" :key="equation.id">
         <span class="number">
           <span v-for="char in equation.firstNumberStr" :key="char" class="number-square">{{char}}</span>
