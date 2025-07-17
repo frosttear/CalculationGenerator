@@ -115,6 +115,20 @@ h1 {
         margin-left: 5px;
     }
 
+    .input-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .input-group label {
+        margin-bottom: 0;
+    }
+
+    .input-group input[type="number"] {
+        width: 80px;
+    }
+
     .equation-container {
         display: flex;
         flex-wrap: wrap;

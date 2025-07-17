@@ -43,10 +43,12 @@
   <div id="app">
     <h1 data-l10n-key="calculationGeneratorTitle"></h1>
     <div class="no-print input-area">
-      <label for="rangeStart" data-l10n-key="numberRange"></label>
-      <input type="number" id="rangeStart" v-model.number="rangeStart" />
-      <label for="rangeEnd" data-l10n-key="to"></label>
-      <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
+      <div class="input-group">
+        <label for="rangeStart" data-l10n-key="numberRange"></label>
+        <input type="number" id="rangeStart" v-model.number="rangeStart" />
+        <label for="rangeEnd" data-l10n-key="to"></label>
+        <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
+      </div>
       <label for="rowsPerPage" data-l10n-key="rowsPerDay"></label>
       <input type="number" id="rowsPerDay" v-model.number="rowsPerDay" />
       <label for="colsPerPage" data-l10n-key="colsPerDay"></label>

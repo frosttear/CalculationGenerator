@@ -34,10 +34,12 @@
   <div id="app">
     <h1 data-l10n-key="calculationGenerator2Title"></h1>
     <div class="no-print input-area">
-      <label for="rangeStart" data-l10n-key="numberGreaterThanOrEqualTo"></label>
-      <input type="number" id="rangeStart" v-model.number="rangeStart" />
-      <label for="rangeEnd" data-l10n-key="numberLessThanOrEqualTo"></label>
-      <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
+      <div class="input-group">
+        <label for="rangeStart" data-l10n-key="numberGreaterThanOrEqualTo"></label>
+        <input type="number" id="rangeStart" v-model.number="rangeStart" />
+        <label for="rangeEnd" data-l10n-key="numberLessThanOrEqualTo"></label>
+        <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
+      </div>
       <label for="rowCount" data-l10n-key="rowCount"></label>
       <input type="number" id="rowCount" v-model.number="rowCount" />
       <label for="columnCount" data-l10n-key="columnCount"></label>
