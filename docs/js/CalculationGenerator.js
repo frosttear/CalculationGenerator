@@ -23,8 +23,10 @@ const CalculationGenerator = {
                 let number1, number2, number3, operator, operator2, result;
                 let lbracket = '', rbracket = '';
                 let isValid = false;
+                let globalAttempts = 0;
 
-                while (!isValid) {
+                while (!isValid && globalAttempts < 1000) {
+                    globalAttempts++;
                     isValid = true;
                     lbracket = '';
                     rbracket = '';
@@ -36,23 +38,51 @@ const CalculationGenerator = {
                         number3 = '';
 
                         if (operator === '/') {
-                            let quotient = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
-                            let divisor = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
-                            number1 = quotient * divisor;
-                            number2 = divisor;
-
-                            if (number1 > rangeEnd || number1 < rangeStart || number2 === 0 || number2 < rangeStart || number2 > rangeEnd) {
+                            let attempts = 0;
+                            do {
+                                let quotient = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
+                                let divisor = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
+                                number1 = quotient * divisor;
+                                number2 = divisor;
+                                attempts++;
+                                
+                                if (attempts > 100) {
+                                    // Fallback: create a simple valid division
+                                    number2 = Math.max(1, rangeStart);
+                                    number1 = number2 * Math.max(1, Math.min(rangeEnd, Math.floor(rangeEnd / number2)));
+                                    break;
+                                }
+                            } while (number1 > rangeEnd || number1 < rangeStart || number2 === 0 || number2 < rangeStart || number2 > rangeEnd);
+                            
+                            // Additional safety check
+                            if (number2 === 0 || number1 % number2 !== 0) {
                                 isValid = false;
                                 continue;
                             }
                         } else if (operator === '*') {
                             let maxFactor = Math.floor(Math.sqrt(rangeEnd));
-                            if (maxFactor < 1) maxFactor = 1;
-                            number1 = getRandomNumber(rangeStart, maxFactor);
-                            number2 = getRandomNumber(rangeStart, maxFactor);
-                            if (number1 * number2 > rangeEnd || number1 * number2 < rangeStart) {
-                                isValid = false;
-                                continue;
+                            if (maxFactor < rangeStart) {
+                                // If maxFactor is less than rangeStart, we can't generate valid multiplication
+                                // Use a more flexible approach
+                                let attempts = 0;
+                                do {
+                                    number1 = getRandomNumber(Math.max(1, rangeStart), Math.min(rangeEnd, Math.floor(rangeEnd / 2)));
+                                    number2 = getRandomNumber(Math.max(1, rangeStart), Math.min(rangeEnd, Math.floor(rangeEnd / number1)));
+                                    attempts++;
+                                    if (attempts > 100) {
+                                        // Fallback: use smaller numbers that definitely work
+                                        number1 = Math.max(1, rangeStart);
+                                        number2 = Math.max(1, Math.floor(rangeEnd / number1));
+                                        break;
+                                    }
+                                } while (number1 * number2 > rangeEnd || number1 * number2 < rangeStart);
+                            } else {
+                                number1 = getRandomNumber(rangeStart, maxFactor);
+                                number2 = getRandomNumber(rangeStart, maxFactor);
+                                if (number1 * number2 > rangeEnd || number1 * number2 < rangeStart) {
+                                    isValid = false;
+                                    continue;
+                                }
                             }
                         } else {
                             number1 = getRandomNumber(rangeStart, rangeEnd);
@@ -160,6 +190,16 @@ const CalculationGenerator = {
                             continue;
                         }
                     }
+                }
+
+                // If we exhausted attempts without finding a valid equation, throw an error
+                if (!isValid) {
+                    // Create error object with data for localization
+                    const error = new Error('EQUATION_GENERATION_FAILED');
+                    error.operators = operators;
+                    error.rangeStart = rangeStart;
+                    error.rangeEnd = rangeEnd;
+                    throw error;
                 }
 
                 // Add equation to the current row

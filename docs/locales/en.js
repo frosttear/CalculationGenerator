@@ -54,5 +54,6 @@ window.enTranslations = {
   "lengthTransformationTitle": "Length Unit Transformation",
   "lengthTransformationDescription": "Practice for length unit conversions.",
   "weightTransformationTitle": "Weight Unit Transformation",
-  "weightTransformationDescription": "Practice for weight unit conversions."
+  "weightTransformationDescription": "Practice for weight unit conversions.",
+  "equationGenerationError": "Unable to generate valid equations with the selected operators [{{operators}}] and range {{rangeStart}}-{{rangeEnd}}. Please try: 1) Expanding the number range, 2) Including addition (+) or subtraction (-) operators, or 3) Using a smaller range for multiplication/division."
 };

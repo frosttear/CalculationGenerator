@@ -54,5 +54,6 @@ window.zhTranslations = {
   "lengthTransformationTitle": "长度单位换算",
   "lengthTransformationDescription": "长度单位换算练习",
   "weightTransformationTitle": "重量单位换算",
-  "weightTransformationDescription": "重量单位换算练习"
+  "weightTransformationDescription": "重量单位换算练习",
+  "equationGenerationError": "无法使用所选运算符 [{{operators}}] 和范围 {{rangeStart}}-{{rangeEnd}} 生成有效的算式。请尝试：1) 扩大数字范围，2) 包含加法 (+) 或减法 (-) 运算符，或 3) 对乘法/除法使用较小的范围。"
 };

@@ -123,19 +123,39 @@
             this.errorMessage = window.translate('selectAtLeastOneOperator');
             return;
           }
-          this.showInput = false;
-          this.equationGroups = CalculationGenerator.generateEquations({
-            rangeStart: this.rangeStart,
-            rangeEnd: this.rangeEnd,
-            dayCount: this.dayCount,
-            operators: this.operators,
-            dailyTwoOperatorsNum: this.dailyTwoOperatorsNum,
-            rowsPerDay: this.rowsPerDay,
-            colsPerDay: this.colsPerDay
-          });
-          this.$nextTick(() => {
-            window.applyTranslations();
-          });
+          
+          try {
+            this.showInput = false;
+            this.equationGroups = CalculationGenerator.generateEquations({
+              rangeStart: this.rangeStart,
+              rangeEnd: this.rangeEnd,
+              dayCount: this.dayCount,
+              operators: this.operators,
+              dailyTwoOperatorsNum: this.dailyTwoOperatorsNum,
+              rowsPerDay: this.rowsPerDay,
+              colsPerDay: this.colsPerDay
+            });
+            this.$nextTick(() => {
+              window.applyTranslations();
+            });
+          } catch (error) {
+            this.showInput = true; // Show input form again
+            
+            // Handle localized error messages
+            if (error.message === 'EQUATION_GENERATION_FAILED') {
+              // Get localized error message and substitute parameters
+              let errorMsg = window.translate('equationGenerationError');
+              errorMsg = errorMsg.replace('{{operators}}', error.operators.join(', '));
+              errorMsg = errorMsg.replace('{{rangeStart}}', error.rangeStart);
+              errorMsg = errorMsg.replace('{{rangeEnd}}', error.rangeEnd);
+              this.errorMessage = errorMsg;
+            } else {
+              // Fallback to original error message
+              this.errorMessage = error.message;
+            }
+            
+            this.equationGroups = []; // Clear any partial results
+          }
         },
         calculateResult(number1, number2, operator) {
           return CalculationGenerator.calculateResult(number1, number2, operator);
