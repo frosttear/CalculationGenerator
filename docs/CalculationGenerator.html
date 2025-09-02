@@ -77,7 +77,7 @@
                 <table border="0">
                     <tr v-for="(row, rowIndex) in dayGroup" :key="rowIndex">
                         <td v-for="(equation, colIndex) in row" :key="colIndex" class="equation">
-                            {{ equation.lbracket }}{{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }}{{ equation.rbracket }} {{ equation.operator2 }} {{ equation.number3 }} = ____
+                            {{ equation.lbracket }}{{ equation.number1 }} {{ displayOperator(equation.operator) }} {{ equation.number2 }}{{ equation.rbracket }} {{ displayOperator(equation.operator2) }} {{ equation.number3 }} = ____
                         </td>
                     </tr>
                 </table>
@@ -91,7 +91,7 @@
                 <table border="0">
                     <tr v-for="(row, rowIndex) in dayGroup" :key="rowIndex">
                         <td v-for="(equation, colIndex) in row" :key="colIndex" class="equation">
-                            {{ equation.lbracket }}{{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }}{{ equation.rbracket }} {{ equation.operator2 }} {{ equation.number3 }} = {{ equation.result }}
+                            {{ equation.lbracket }}{{ equation.number1 }} {{ displayOperator(equation.operator) }} {{ equation.number2 }}{{ equation.rbracket }} {{ displayOperator(equation.operator2) }} {{ equation.number3 }} = {{ equation.result }}
                         </td>
                     </tr>
                 </table>
@@ -139,6 +139,9 @@
         },
         calculateResult(number1, number2, operator) {
           return CalculationGenerator.calculateResult(number1, number2, operator);
+        },
+        displayOperator(op) {
+          return op === '*' ? '×' : op;
         }
       }
     });

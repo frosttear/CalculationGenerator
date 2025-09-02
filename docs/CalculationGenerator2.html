@@ -67,7 +67,7 @@
       <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
       <ul>
         <li v-for="(equation, i) in column" :key="i">
-          {{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }} = ____
+          {{ equation.number1 }} {{ displayOperator(equation.operator) }} {{ equation.number2 }} = ____
         </li>
       </ul>
     </div>
@@ -153,6 +153,9 @@
             case '\u00F7':
               return number1 / number2;
           }
+        },
+        displayOperator(op) {
+          return op === '*' ? '×' : op;
         }
       }
     });

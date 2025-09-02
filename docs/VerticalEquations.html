@@ -65,7 +65,7 @@
           <span v-for="char in equation.firstNumberStr" :key="char" class="number-square">{{char}}</span>
         </span>
         <br>
-        <span>{{ equation.operator }}</span>
+        <span>{{ displayOperator(equation.operator) }}</span>
         <span class="number">
           <span v-for="char in equation.secondNumberStr" :key="char" class="number-square">{{char}}</span>
         </span>
@@ -123,6 +123,9 @@
         },
         toggleResult() {
           this.showResult = !this.showResult;
+        },
+        displayOperator(op) {
+          return op === '*' ? '×' : op;
         }
       }
     });
