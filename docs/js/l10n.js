@@ -8,9 +8,27 @@ const getBasePath = () => {
     const protocol = window.location.protocol;
     const repoName = 'CalculationGenerator'; // Your repository name
     
-    // For GitHub Pages (http/https)
-    if (protocol !== 'file:' && path.includes(`/${repoName}/`)) {
-        return `/${repoName}/`;
+    // For web servers (http/https) including GitHub Pages
+    if (protocol !== 'file:') {
+        if (path.includes(`/${repoName}/`)) {
+            // GitHub Pages with repository name in path
+            if (path.includes('/docs/')) {
+                // We're in docs folder on GitHub Pages
+                return `/${repoName}/docs/locales/`;
+            } else {
+                // We're in root on GitHub Pages
+                return `/${repoName}/docs/locales/`;
+            }
+        } else {
+            // Regular web server or GitHub Pages with custom domain
+            if (path.includes('/docs/')) {
+                // We're in docs folder
+                return 'locales/';
+            } else {
+                // We're in root directory
+                return 'docs/locales/';
+            }
+        }
     }
     
     // For local file access (file://), use relative paths
@@ -25,7 +43,7 @@ const getBasePath = () => {
     }
     
     // Default fallback
-    return '';
+    return 'docs/locales/';
 };
 
 const basePath = getBasePath();
