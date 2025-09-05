@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-l10n-key="twoDigitMultiplicationTitle"></title>
+  <!-- Vue.js CDN -->
+  <script src="js/vue.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="js/l10n.js" defer></script>
+  <style>
+        table {
+            margin-bottom: 0px;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 5px 15px;
+            text-align: left;
+        }
+
+        .header {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .equation {
+            min-width: 100px;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+  <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
+  <div id="app">
+    <h1 data-l10n-key="twoDigitMultiplicationTitle"></h1>
+    <div class="no-print input-area">
+      <div class="input-group">
+        <label for="equationCount" data-l10n-key="equationCountPerDay"></label>
+        <input type="number" id="equationCount" v-model.number="equationCount" min="1" max="50" />
+      </div>
+      <div class="input-group">
+        <label for="dayCount" data-l10n-key="dayCount"></label>
+        <input type="number" id="dayCount" v-model.number="dayCount" min="1" max="10" />
+      </div>
+      <div class="input-group">
+        <label for="rowsPerPage" data-l10n-key="rowsPerDay"></label>
+        <input type="number" id="rowsPerDay" v-model.number="rowsPerDay" min="1" max="10" />
+        <label for="colsPerPage" data-l10n-key="colsPerDay"></label>
+        <input type="number" id="colsPerPage" v-model.number="colsPerDay" min="1" max="10" />
+      </div>
+      <div class="input-group">
+        <label for="enableConstraint" data-l10n-key="enableLeastDigitConstraint"></label>
+        <input type="checkbox" id="enableConstraint" v-model="enableLeastDigitConstraint" />
+        <span data-l10n-key="leastDigitConstraintDescription"></span>
+      </div>
+      <button @click="generateEquations" data-l10n-key="generate" class="generate-button"></button>
+    </div>
+    <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
+    <div v-if="equationGroups.length > 0">
+            <div v-for="(dayGroup, index) in equationGroups" :key="index">
+                <h2 class="header" data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></h2>
+                <table border="0">
+                    <tr v-for="(row, rowIndex) in dayGroup" :key="rowIndex">
+                        <td v-for="(equation, colIndex) in row" :key="colIndex" class="equation">
+                            {{ equation.number1 }} × {{ equation.number2 }} = ____
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+     <div style="page-break-after: always;"></div>
+     <h1><span data-l10n-key="answerPageTitle"></span></h1>
+     <div v-if="equationGroups.length > 0">
+            <div v-for="(dayGroup, index2) in equationGroups" :key="index2">
+                <h2 class="header" data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index2 + 1 })"></h2>
+                <table border="0">
+                    <tr v-for="(row, rowIndex) in dayGroup" :key="rowIndex">
+                        <td v-for="(equation, colIndex) in row" :key="colIndex" class="equation">
+                            {{ equation.number1 }} × {{ equation.number2 }} = {{ equation.result }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+   </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        showInput: true,
+        equationCount: 20,
+        dayCount: 5,
+        rowsPerDay: 4,
+        colsPerDay: 5,
+        enableLeastDigitConstraint: true,
+        equationGroups: [],
+        errorMessage: ''
+      },
+      methods: {
+        generateEquations() {
+          this.errorMessage = ''; // Clear previous errors
+          
+          try {
+            this.showInput = false;
+            this.equationGroups = this.generateTwoDigitMultiplication({
+              equationCount: this.equationCount,
+              dayCount: this.dayCount,
+              rowsPerDay: this.rowsPerDay,
+              colsPerDay: this.colsPerDay,
+              enableLeastDigitConstraint: this.enableLeastDigitConstraint
+            });
+            this.$nextTick(() => {
+              window.applyTranslations();
+            });
+          } catch (error) {
+            this.showInput = true; // Show input form again
+            this.errorMessage = error.message;
+            this.equationGroups = []; // Clear any partial results
+          }
+        },
+        
+        generateTwoDigitMultiplication(options) {
+          const { equationCount, dayCount, rowsPerDay, colsPerDay, enableLeastDigitConstraint } = options;
+          const dailyNum = equationCount; // equationCount is now per day
+          const equationGroups = [];
+
+          for (let day = 0; day < dayCount; day++) {
+            const dayGroup = [];
+            let equationCount = 0;
+
+            while (equationCount < dailyNum) {
+              let number1, number2, result;
+              let isValid = false;
+              let attempts = 0;
+
+              while (!isValid && attempts < 1000) {
+                attempts++;
+                
+                // Generate two-digit number (10-99)
+                number1 = Math.floor(Math.random() * 90) + 10;
+                
+                // Generate one-digit number (2-9)
+                number2 = Math.floor(Math.random() * 8) + 2;
+                
+                // Check constraint 1: least significant digit product < 10 (if enabled)
+                if (enableLeastDigitConstraint) {
+                  const leastDigit = number1 % 10;
+                  const leastDigitProduct = leastDigit * number2;
+                  
+                  if (leastDigitProduct >= 10) {
+                    continue; // Skip this combination
+                  }
+                }
+                
+                // Check constraint 2: final result < 100
+                result = number1 * number2;
+                if (result >= 100) {
+                  continue; // Skip this combination
+                }
+                
+                isValid = true;
+              }
+
+              if (!isValid) {
+                const constraintMsg = enableLeastDigitConstraint ? ' with least digit constraint' : '';
+                throw new Error(`Unable to generate enough valid two-digit multiplication problems${constraintMsg}. Please try reducing the equation count or disabling constraints.`);
+              }
+
+              // Add equation to the current row
+              if (equationCount % colsPerDay === 0) {
+                rowEquations = []; // Start a new row
+                dayGroup.push(rowEquations);
+              }
+              rowEquations.push({ number1, number2, result });
+              equationCount++;
+              
+              // Stop if we've reached the target equation count for this day
+              if (equationCount >= dailyNum) {
+                break;
+              }
+            }
+            equationGroups.push(dayGroup);
+          }
+          return equationGroups;
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>

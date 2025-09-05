@@ -55,5 +55,10 @@ window.enTranslations = {
   "lengthTransformationDescription": "Practice for length unit conversions.",
   "weightTransformationTitle": "Weight Unit Transformation",
   "weightTransformationDescription": "Practice for weight unit conversions.",
+  "twoDigitMultiplicationTitle": "Two-Digit × One-Digit Practice",
+  "twoDigitMultiplicationDescription": "Specialized practice for two-digit × one-digit multiplication with constraints: ones digit product < 10, result < 100.",
+  "equationCountPerDay": "Equations Per Day",
+  "enableLeastDigitConstraint": "Enable Ones Digit Constraint",
+  "leastDigitConstraintDescription": "Ensure ones digit product < 10",
   "equationGenerationError": "Unable to generate valid equations with the selected operators [{{operators}}] and range {{rangeStart}}-{{rangeEnd}}. Please try: 1) Expanding the number range, 2) Including addition (+) or subtraction (-) operators, or 3) Using a smaller range for multiplication/division."
 };
