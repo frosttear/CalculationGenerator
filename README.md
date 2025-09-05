@@ -13,6 +13,7 @@ You can access the practice pages here: [https://frosttear.github.io/Calculation
     *   Basic addition and subtraction within 10.
     *   Customizable arithmetic problems (addition, subtraction, multiplication, division) with configurable number ranges and complexity.
     *   Vertical addition and subtraction problems.
+    *   Specialized two-digit multiplication and division practice with educational constraints.
     *   Unit conversion exercises for Chinese RMB (Yuan, Jiao, Fen) and time (Hours, Minutes, Seconds).
 *   **Interactive and Printable:** The pages are designed to be used interactively in the browser or printed for offline practice.
 *   **Minesweeper Game:** A classic Minesweeper game is included for fun and to practice logical thinking.
@@ -25,6 +26,8 @@ All pages can be accessed from the main [`docs/index.html`](./docs/index.html) p
 *   **[Calculation Generator](./docs/CalculationGenerator.html):** A flexible generator for creating practice sheets with a mix of operators (+, -, ×, ÷), configurable number ranges, and problems with up to three numbers.
 *   **[Calculation Generator 2](./docs/CalculationGenerator2.html):** Creates column-based arithmetic problems.
 *   **[Vertical Equations](./docs/VerticalEquations.html):** Focuses on two-digit vertical (columnar) addition and subtraction.
+*   **[Two-Digit Multiplication](./docs/TwoDigitMultiplication.html):** Specialized practice for two-digit × one-digit multiplication with constraints (least significant digit product < 10, result < 100).
+*   **[Two-Digit Division](./docs/TwoDigitDivision.html):** Specialized practice for two-digit ÷ one-digit division with no remainder constraints and optional first digit divisibility.
 *   **[RMB Unit Transformation](./docs/RmbUnitTransformation.html):** Practice converting between Chinese currency units: Yuan (元), Jiao (角), and Fen (分).
 *   **[Time Unit Transformation](./docs/TimeUnitTransformation.html):** Practice converting between time units: Hours, Minutes, and Seconds.
 *   **[Length Unit Transformation](./docs/LengthUnitTransformation.html):** Practice converting between length units: Kilometers, Meters, Decimeters, Centimeters, and Millimeters.
