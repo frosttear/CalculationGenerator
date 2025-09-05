@@ -57,8 +57,12 @@ window.enTranslations = {
   "weightTransformationDescription": "Practice for weight unit conversions.",
   "twoDigitMultiplicationTitle": "Two-Digit × One-Digit Practice",
   "twoDigitMultiplicationDescription": "Specialized practice for two-digit × one-digit multiplication with constraints: ones digit product < 10, result < 100.",
+  "twoDigitDivisionTitle": "Two-Digit ÷ One-Digit Practice",
+  "twoDigitDivisionDescription": "Specialized practice for two-digit ÷ one-digit division with no remainder, optional first digit constraint.",
   "equationCountPerDay": "Equations Per Day",
   "enableLeastDigitConstraint": "Enable Ones Digit Constraint",
   "leastDigitConstraintDescription": "Ensure ones digit product < 10",
+  "enableFirstDigitConstraint": "Enable First Digit Constraint",
+  "firstDigitConstraintDescription": "Ensure first digit is divisible by divisor",
   "equationGenerationError": "Unable to generate valid equations with the selected operators [{{operators}}] and range {{rangeStart}}-{{rangeEnd}}. Please try: 1) Expanding the number range, 2) Including addition (+) or subtraction (-) operators, or 3) Using a smaller range for multiplication/division."
 };

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-l10n-key="twoDigitDivisionTitle">两位数除一位数练习</title>
+  <script src="js/vue.min.js"></script>
+  <script src="js/l10n.js" defer></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+      transform: scale(1.2);
+    }
+    
+    .constraint-description {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+      font-style: italic;
+    }
+    
+
+    
+    @media print {
+      .no-print {
+        display: none;
+      }
+      
+      body {
+        background-color: white;
+        padding: 0;
+      }
+      
+      .container {
+        box-shadow: none;
+        padding: 0;
+      }
+      
+      .equation-day {
+        page-break-before: always;
+      }
+      
+      .equation-day:first-child {
+        page-break-before: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
+    <h1 data-l10n-key="twoDigitDivisionTitle"></h1>
+    <div class="no-print input-area">
+      <label for="equationCount" data-l10n-key="equationCountPerDay"></label>
+      <input type="number" id="equationCount" v-model.number="equationCount" min="1" max="50" />
+      
+      <label for="dayCount" data-l10n-key="dayCount"></label>
+      <input type="number" id="dayCount" v-model.number="dayCount" min="1" max="30" />
+      
+      <label for="rowsPerDay" data-l10n-key="rowsPerDay"></label>
+      <input type="number" id="rowsPerDay" v-model.number="rowsPerDay" min="1" max="20" />
+      
+      <label for="colsPerDay" data-l10n-key="colsPerDay"></label>
+      <input type="number" id="colsPerDay" v-model.number="colsPerDay" min="1" max="10" />
+      
+      <div class="checkbox-group">
+        <input type="checkbox" id="enableFirstDigitConstraint" v-model="enableFirstDigitConstraint" />
+        <label for="enableFirstDigitConstraint" data-l10n-key="enableFirstDigitConstraint"></label>
+      </div>
+      <div class="constraint-description" data-l10n-key="firstDigitConstraintDescription"></div>
+      
+      <button @click="generateEquations" data-l10n-key="generate" class="generate-button"></button>
+    </div>
+
+    <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
+
+    <div v-if="equationGroups.length > 0">
+      <div v-for="(dayGroup, index) in equationGroups" :key="index">
+        <h2 class="header" data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></h2>
+        <table border="0">
+          <tr v-for="(row, rowIndex) in dayGroup" :key="rowIndex">
+            <td v-for="(equation, colIndex) in row" :key="colIndex" class="equation">
+              {{ equation.number1 }} {{ displayOperator('÷') }} {{ equation.number2 }} = ____
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div style="page-break-after: always;"></div>
+    <h1><span data-l10n-key="answerPageTitle"></span></h1>
+    <div v-if="equationGroups.length > 0">
+      <div v-for="(dayGroup, index2) in equationGroups" :key="index2">
+        <h2 class="header" data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index2 + 1 })"></h2>
+        <table border="0">
+          <tr v-for="(row, rowIndex) in dayGroup" :key="rowIndex">
+            <td v-for="(equation, colIndex) in row" :key="colIndex" class="equation">
+              {{ equation.number1 }} {{ displayOperator('÷') }} {{ equation.number2 }} = {{ equation.result }}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        showInput: true,
+        equationCount: 20,
+        dayCount: 5,
+        rowsPerDay: 4,
+        colsPerDay: 5,
+        enableFirstDigitConstraint: true,
+        equationGroups: [],
+        errorMessage: ''
+      },
+      
+      methods: {
+        displayOperator(operator) {
+          if (operator === '÷') {
+            return '÷';
+          }
+          return operator;
+        },
+        
+        async generateEquations() {
+          this.errorMessage = '';
+          try {
+            const options = {
+              equationCount: this.equationCount,
+              dayCount: this.dayCount,
+              rowsPerDay: this.rowsPerDay,
+              colsPerDay: this.colsPerDay,
+              enableFirstDigitConstraint: this.enableFirstDigitConstraint
+            };
+            
+            this.equationGroups = this.generateTwoDigitDivision(options);
+            this.showInput = false;
+            this.$nextTick(() => {
+              window.applyTranslations();
+            });
+          } catch (error) {
+            this.errorMessage = error.message;
+          }
+        },
+        
+        generateTwoDigitDivision(options) {
+          const { equationCount, dayCount, rowsPerDay, colsPerDay, enableFirstDigitConstraint } = options;
+          const dailyNum = equationCount; // equationCount is now per day
+          const equationGroups = [];
+
+          for (let day = 0; day < dayCount; day++) {
+            const dayGroup = [];
+            let equationCount = 0;
+
+            while (equationCount < dailyNum) {
+              let number1, number2, result;
+              let isValid = false;
+              let attempts = 0;
+
+              while (!isValid && attempts < 1000) {
+                attempts++;
+                
+                // Generate divisor (2-9, avoiding 1 for meaningful practice)
+                number2 = Math.floor(Math.random() * 8) + 2;
+                
+                // Generate result first (1-99 ÷ number2 should give reasonable two-digit dividend)
+                const maxResult = Math.floor(99 / number2);
+                const minResult = Math.max(1, Math.ceil(10 / number2));
+                
+                if (maxResult < minResult) {
+                  continue; // Skip if no valid result range
+                }
+                
+                result = Math.floor(Math.random() * (maxResult - minResult + 1)) + minResult;
+                number1 = result * number2; // This ensures no remainder for whole division
+                
+                // Ensure number1 is two digits (10-99)
+                if (number1 < 10 || number1 > 99) {
+                  continue;
+                }
+                
+                // Check first digit constraint if enabled
+                if (enableFirstDigitConstraint) {
+                  const firstDigit = Math.floor(number1 / 10);
+                  if (firstDigit % number2 !== 0) {
+                    continue; // First digit must be divisible by number2
+                  }
+                }
+                
+                isValid = true;
+              }
+
+              if (!isValid) {
+                const constraintMsg = enableFirstDigitConstraint ? ' with first digit constraint' : '';
+                throw new Error(`Unable to generate enough valid two-digit division problems${constraintMsg}. Please try reducing the equation count or disabling constraints.`);
+              }
+
+              // Add equation to the current row
+              if (equationCount % colsPerDay === 0) {
+                rowEquations = []; // Start a new row
+                dayGroup.push(rowEquations);
+              }
+              rowEquations.push({ number1, number2, result });
+              equationCount++;
+              
+              // Stop if we've reached the target equation count for this day
+              if (equationCount >= dailyNum) {
+                break;
+              }
+            }
+            equationGroups.push(dayGroup);
+          }
+          return equationGroups;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

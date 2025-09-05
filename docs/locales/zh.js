@@ -57,8 +57,12 @@ window.zhTranslations = {
   "weightTransformationDescription": "重量单位换算练习",
   "twoDigitMultiplicationTitle": "两位数乘一位数练习",
   "twoDigitMultiplicationDescription": "两位数乘一位数专项练习，个位数相乘小于10，结果小于100",
+  "twoDigitDivisionTitle": "两位数除一位数练习",
+  "twoDigitDivisionDescription": "两位数除一位数专项练习，整除无余数，可选首位数整除约束",
   "equationCountPerDay": "每天题目数量",
   "enableLeastDigitConstraint": "启用个位数约束",
   "leastDigitConstraintDescription": "确保个位数相乘结果小于10",
+  "enableFirstDigitConstraint": "启用首位数约束",
+  "firstDigitConstraintDescription": "确保首位数能被除数整除",
   "equationGenerationError": "无法使用所选运算符 [{{operators}}] 和范围 {{rangeStart}}-{{rangeEnd}} 生成有效的算式。请尝试：1) 扩大数字范围，2) 包含加法 (+) 或减法 (-) 运算符，或 3) 对乘法/除法使用较小的范围。"
 };

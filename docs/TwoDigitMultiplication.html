@@ -5,10 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-l10n-key="twoDigitMultiplicationTitle"></title>
-  <!-- Vue.js CDN -->
   <script src="js/vue.min.js"></script>
-  <link rel="stylesheet" href="styles.css">
   <script src="js/l10n.js" defer></script>
+  <link rel="stylesheet" href="styles.css">
   <style>
         table {
             margin-bottom: 0px;
@@ -106,6 +105,7 @@
         equationGroups: [],
         errorMessage: ''
       },
+      
       methods: {
         generateEquations() {
           this.errorMessage = ''; // Clear previous errors
