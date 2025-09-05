@@ -42,25 +42,24 @@
   <div id="app">
     <h1 data-l10n-key="twoDigitMultiplicationTitle"></h1>
     <div class="no-print input-area">
-      <div class="input-group">
-        <label for="equationCount" data-l10n-key="equationCountPerDay"></label>
-        <input type="number" id="equationCount" v-model.number="equationCount" min="1" max="50" />
-      </div>
-      <div class="input-group">
-        <label for="dayCount" data-l10n-key="dayCount"></label>
-        <input type="number" id="dayCount" v-model.number="dayCount" min="1" max="10" />
-      </div>
-      <div class="input-group">
-        <label for="rowsPerPage" data-l10n-key="rowsPerDay"></label>
-        <input type="number" id="rowsPerDay" v-model.number="rowsPerDay" min="1" max="10" />
-        <label for="colsPerPage" data-l10n-key="colsPerDay"></label>
-        <input type="number" id="colsPerPage" v-model.number="colsPerDay" min="1" max="10" />
-      </div>
-      <div class="input-group">
-        <label for="enableConstraint" data-l10n-key="enableLeastDigitConstraint"></label>
+      <label for="equationCount" data-l10n-key="equationCountPerDay"></label>
+      <input type="number" id="equationCount" v-model.number="equationCount" min="1" max="50" />
+      
+      <label for="dayCount" data-l10n-key="dayCount"></label>
+      <input type="number" id="dayCount" v-model.number="dayCount" min="1" max="10" />
+      
+      <label for="rowsPerPage" data-l10n-key="rowsPerDay"></label>
+      <input type="number" id="rowsPerDay" v-model.number="rowsPerDay" min="1" max="10" />
+      
+      <label for="colsPerPage" data-l10n-key="colsPerDay"></label>
+      <input type="number" id="colsPerPage" v-model.number="colsPerDay" min="1" max="10" />
+      
+      <div class="checkbox-group">
         <input type="checkbox" id="enableConstraint" v-model="enableLeastDigitConstraint" />
-        <span data-l10n-key="leastDigitConstraintDescription"></span>
+        <label for="enableConstraint" data-l10n-key="enableLeastDigitConstraint"></label>
       </div>
+      <div class="constraint-description" data-l10n-key="leastDigitConstraintDescription"></div>
+      
       <button @click="generateEquations" data-l10n-key="generate" class="generate-button"></button>
     </div>
     <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
