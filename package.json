@@ -7,7 +7,11 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "jest CalculationGenerator.test.js CalculationGenerator.integration.test.js"
+    "test": "jest",
+    "test:unit": "jest CalculationGenerator.test.js UnitConverter.test.js",
+    "test:integration": "jest CalculationGenerator.integration.test.js",
+    "test:specialized": "jest TwoDigitMultiplication.test.js TwoDigitDivision.test.js",
+    "test:all": "jest"
   },
   "repository": {
     "type": "git",

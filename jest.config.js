@@ -1,3 +1,12 @@
 module.exports = {
     testEnvironment: 'jsdom',
+    testMatch: [
+        '**/CalculationGenerator.test.js',
+        '**/CalculationGenerator.integration.test.js',
+        '**/UnitConverter.test.js',
+        '**/TwoDigitMultiplication.test.js',
+        '**/TwoDigitDivision.test.js'
+    ],
+    verbose: true,
+    collectCoverage: false
 };
