@@ -59,6 +59,8 @@ window.enTranslations = {
   "twoDigitMultiplicationDescription": "Specialized practice for two-digit × one-digit multiplication with constraints: ones digit product < 10, result < 100.",
   "twoDigitDivisionTitle": "Two-Digit ÷ One-Digit Practice",
   "twoDigitDivisionDescription": "Specialized practice for two-digit ÷ one-digit division with no remainder, optional first digit constraint.",
+  "twoDigitPracticeTitle": "Two-Digit Mixed Practice",
+  "twoDigitPracticeDescription": "Combined practice for two-digit multiplication and division with operator selection and specialized constraints.",
   "equationCountPerDay": "Equations Per Day",
   "enableLeastDigitConstraint": "Enable Ones Digit Constraint",
   "leastDigitConstraintDescription": "Ensure ones digit product < 10",

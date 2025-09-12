@@ -70,10 +70,10 @@ npx jest TwoDigitDivision.test.js
 
 ### **Jest Test Output**
 ```
-Test Suites: 5 passed, 5 total
-Tests:       39 passed, 39 total
+Test Suites: 6 passed, 6 total
+Tests:       49 passed, 49 total
 Snapshots:   0 total
-Time:        1.019 s
+Time:        1.633 s
 ```
 
 ### **Individual Test Suite Results**
@@ -82,6 +82,7 @@ Time:        1.019 s
 - **UnitConverter**: 11 tests (length, weight, RMB, time conversions)
 - **TwoDigitMultiplication**: 9 tests (constraint validation and edge cases)
 - **TwoDigitDivision**: 11 tests (division constraints and validation)
+- **TwoDigitPractice**: 10 tests (mixed operations, operator selection, constraints)
 
 ## 🛠️ Adding New Tests
 
@@ -114,5 +115,6 @@ Time:        1.019 s
 - All tests use the Jest framework (already installed and configured)
 - Tests validate mathematical correctness and constraint compliance
 - Robust error handling accounts for randomness in equation generation
-- All 39 tests consistently pass with unified Jest approach
-- Jest configuration includes all 5 test suites with verbose output
+- All 49 tests consistently pass with unified Jest approach
+- Jest configuration includes all 6 test suites with verbose output
+- New unified two-digit practice page supports mixed multiplication and division operations

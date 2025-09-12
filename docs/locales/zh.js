@@ -59,6 +59,8 @@ window.zhTranslations = {
   "twoDigitMultiplicationDescription": "两位数乘一位数专项练习，个位数相乘小于10，结果小于100",
   "twoDigitDivisionTitle": "两位数除以一位数练习",
   "twoDigitDivisionDescription": "两位数除以一位数专项练习，整除无余数，可选首位数整除约束",
+  "twoDigitPracticeTitle": "两位数混合练习",
+  "twoDigitPracticeDescription": "两位数乘法和除法混合练习，可选择运算符和专项约束",
   "equationCountPerDay": "每天题目数量",
   "enableLeastDigitConstraint": "启用个位数约束",
   "leastDigitConstraintDescription": "确保个位数相乘结果小于10",

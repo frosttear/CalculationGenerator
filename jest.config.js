@@ -5,7 +5,8 @@ module.exports = {
         '**/CalculationGenerator.integration.test.js',
         '**/UnitConverter.test.js',
         '**/TwoDigitMultiplication.test.js',
-        '**/TwoDigitDivision.test.js'
+        '**/TwoDigitDivision.test.js',
+        '**/TwoDigitPractice.test.js'
     ],
     verbose: true,
     collectCoverage: false

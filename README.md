@@ -26,8 +26,9 @@ All pages can be accessed from the main [`docs/index.html`](./docs/index.html) p
 *   **[Calculation Generator](./docs/CalculationGenerator.html):** A flexible generator for creating practice sheets with a mix of operators (+, -, ×, ÷), configurable number ranges, and problems with up to three numbers.
 *   **[Calculation Generator 2](./docs/CalculationGenerator2.html):** Creates column-based arithmetic problems.
 *   **[Vertical Equations](./docs/VerticalEquations.html):** Focuses on two-digit vertical (columnar) addition and subtraction.
-*   **[Two-Digit Multiplication](./docs/TwoDigitMultiplication.html):** Specialized practice for two-digit × one-digit multiplication with constraints (least significant digit product < 10, result < 100).
-*   **[Two-Digit Division](./docs/TwoDigitDivision.html):** Specialized practice for two-digit ÷ one-digit division with no remainder constraints and optional first digit divisibility.
+*   **[Two-Digit × One-Digit Practice](./docs/TwoDigitMultiplication.html):** Specialized multiplication practice with constraints (ones digit product < 10, result < 100)
+*   **[Two-Digit ÷ One-Digit Practice](./docs/TwoDigitDivision.html):** Specialized division practice with no remainder constraint and optional first digit constraint
+*   **[Two-Digit Mixed Practice](./docs/TwoDigitPractice.html):** Unified practice combining multiplication and division with operator selection and specialized constraints
 *   **[RMB Unit Transformation](./docs/RmbUnitTransformation.html):** Practice converting between Chinese currency units: Yuan (元), Jiao (角), and Fen (分).
 *   **[Time Unit Transformation](./docs/TimeUnitTransformation.html):** Practice converting between time units: Hours, Minutes, and Seconds.
 *   **[Length Unit Transformation](./docs/LengthUnitTransformation.html):** Practice converting between length units: Kilometers, Meters, Decimeters, Centimeters, and Millimeters.
