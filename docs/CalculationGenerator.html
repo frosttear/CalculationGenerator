@@ -35,6 +35,17 @@
             min-width: 100px;
             padding: 5px;
         }
+        
+        .input-row {
+            margin-bottom: 10px;
+        }
+        
+        .range-note {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
     </style>
 </head>
 
@@ -44,10 +55,15 @@
     <h1 data-l10n-key="calculationGeneratorTitle"></h1>
     <div class="no-print input-area">
       <div class="input-group">
-        <label for="rangeStart" data-l10n-key="numberRange"></label>
-        <input type="number" id="rangeStart" v-model.number="rangeStart" />
-        <label for="rangeEnd" data-l10n-key="to"></label>
-        <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
+        <div class="input-row">
+          <div>
+            <label for="rangeStart" data-l10n-key="numberRange"></label>
+            <input type="number" id="rangeStart" v-model.number="rangeStart" />
+            <label for="rangeEnd" data-l10n-key="to"></label>
+            <input type="number" id="rangeEnd" v-model.number="rangeEnd" />
+          </div>
+          <div class="range-note" data-l10n-key="rangeNote"></div>
+        </div>
       </div>
       <label for="rowsPerPage" data-l10n-key="rowsPerDay"></label>
       <input type="number" id="rowsPerDay" v-model.number="rowsPerDay" />
@@ -161,7 +177,8 @@
           return CalculationGenerator.calculateResult(number1, number2, operator);
         },
         displayOperator(op) {
-          return op === '*' ? '×' : op;
+          //if op is *, return '\u00D7', if op is /, return '\u00F7', else return op
+          return op === '*' ? '\u00D7' : op === '/' ? '\u00F7' : op;
         }
       }
     });

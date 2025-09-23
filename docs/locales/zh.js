@@ -22,6 +22,7 @@ window.zhTranslations = {
   "simplifiedChinese": "简体中文",
   "numberRange": "数字范围",
   "to": "到",
+  "rangeNote": "注意：数字范围不适用于乘法和除法运算。",
   "rowsPerDay": "每天行数",
   "colsPerDay": "每天列数",
   "dailyTwoOperatorsNum": "每天双运算符题目数",

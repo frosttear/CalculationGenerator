@@ -13,7 +13,14 @@ const CalculationGenerator = {
         const equationGroups = [];
 
         // Helper to generate a random number within a range
-        const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+        // For * and /, always use 2-9 regardless of the specified range
+        const getRandomNumber = (min, max, forceSmallNumbers = false) => {
+            if (forceSmallNumbers) {
+                // Always return a number between 2-9 for * and / operations
+                return Math.floor(Math.random() * 8) + 2; // 2-9 inclusive
+            }
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
 
         for (let c = 0; c < dayCount; c++) {
             const dayGroup = [];
@@ -38,50 +45,58 @@ const CalculationGenerator = {
                         number3 = '';
 
                         if (operator === '/') {
-                            let attempts = 0;
-                            do {
-                                let quotient = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
-                                let divisor = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
+                            // For division, use either:
+                            // 1. Two numbers between 2-9, or
+                            // 2. A two-digit number (10-99) divided by a one-digit number (2-9)
+                            if (Math.random() < 0.5) {
+                                // Option 1: Two single-digit numbers (2-9)
+                                let divisor = getRandomNumber(0, 0, true); // 2-9
+                                let quotient = getRandomNumber(0, 0, true); // 2-9
                                 number1 = quotient * divisor;
                                 number2 = divisor;
-                                attempts++;
+                            } else {
+                                // Option 2: Two-digit dividend, one-digit divisor
+                                number2 = getRandomNumber(0, 0, true); // 2-9
+                                let maxQuotient = Math.min(99, Math.floor(rangeEnd / number2));
+                                if (maxQuotient < 2) maxQuotient = 2;
+                                const quotient = getRandomNumber(2, maxQuotient);
+                                number1 = quotient * number2;
                                 
-                                if (attempts > 100) {
-                                    // Fallback: create a simple valid division
-                                    number2 = Math.max(1, rangeStart);
-                                    number1 = number2 * Math.max(1, Math.min(rangeEnd, Math.floor(rangeEnd / number2)));
-                                    break;
+                                // Ensure the dividend is a two-digit number (10-99)
+                                if (number1 < 10) {
+                                    // If too small, adjust the quotient to make it two digits
+                                    const minQuotient = Math.ceil(10 / number2);
+                                    if (minQuotient <= maxQuotient) {
+                                        const quotient = getRandomNumber(minQuotient, maxQuotient);
+                                        number1 = quotient * number2;
+                                    } else {
+                                        // Fallback to single-digit division if can't make two-digit dividend
+                                        number2 = getRandomNumber(0, 0, true);
+                                        const quotient = getRandomNumber(0, 0, true);
+                                        number1 = quotient * number2;
+                                    }
                                 }
-                            } while (number1 > rangeEnd || number1 < rangeStart || number2 === 0 || number2 < rangeStart || number2 > rangeEnd);
-                            
-                            // Additional safety check
-                            if (number2 === 0 || number1 % number2 !== 0) {
-                                isValid = false;
-                                continue;
                             }
                         } else if (operator === '*') {
-                            let maxFactor = Math.floor(Math.sqrt(rangeEnd));
-                            if (maxFactor < rangeStart) {
-                                // If maxFactor is less than rangeStart, we can't generate valid multiplication
-                                // Use a more flexible approach
-                                let attempts = 0;
-                                do {
-                                    number1 = getRandomNumber(Math.max(1, rangeStart), Math.min(rangeEnd, Math.floor(rangeEnd / 2)));
-                                    number2 = getRandomNumber(Math.max(1, rangeStart), Math.min(rangeEnd, Math.floor(rangeEnd / number1)));
-                                    attempts++;
-                                    if (attempts > 100) {
-                                        // Fallback: use smaller numbers that definitely work
-                                        number1 = Math.max(1, rangeStart);
-                                        number2 = Math.max(1, Math.floor(rangeEnd / number1));
-                                        break;
-                                    }
-                                } while (number1 * number2 > rangeEnd || number1 * number2 < rangeStart);
+                            // For multiplication, use either:
+                            // 1. Two numbers between 2-9, or
+                            // 2. A two-digit number (10-99) and a one-digit number (2-9)
+                            if (Math.random() < 0.5) {
+                                // Option 1: Two single-digit numbers (2-9)
+                                number1 = getRandomNumber(0, 0, true); // 2-9
+                                number2 = getRandomNumber(0, 0, true); // 2-9
                             } else {
-                                number1 = getRandomNumber(rangeStart, maxFactor);
-                                number2 = getRandomNumber(rangeStart, maxFactor);
-                                if (number1 * number2 > rangeEnd || number1 * number2 < rangeStart) {
-                                    isValid = false;
-                                    continue;
+                                // Option 2: Two-digit × one-digit
+                                number1 = getRandomNumber(10, 99); // 10-99
+                                number2 = getRandomNumber(0, 0, true); // 2-9
+                                // Ensure the product is within range
+                                if (number1 * number2 > rangeEnd) {
+                                    // If product is too large, reduce the two-digit number
+                                    number1 = Math.min(99, Math.floor(rangeEnd / number2));
+                                    if (number1 < 10) {
+                                        // If still too large, fall back to single-digit multiplication
+                                        number1 = getRandomNumber(0, 0, true);
+                                    }
                                 }
                             }
                         } else {
@@ -89,10 +104,14 @@ const CalculationGenerator = {
                             number2 = getRandomNumber(rangeStart, rangeEnd);
                         }
                         
+                        // For multiplication and division, we've already ensured valid results with 2-9
+                        // Only validate range for other operations
                         result = this.calculateResult(number1, number2, operator);
-                        if (result < rangeStart || result > rangeEnd || !Number.isInteger(result)) {
-                            isValid = false;
-                            continue;
+                        if (operator === '+' || operator === '-') {
+                            if (result < rangeStart || result > rangeEnd || !Number.isInteger(result)) {
+                                isValid = false;
+                                continue;
+                            }
                         }
 
                     } else {
@@ -117,44 +136,55 @@ const CalculationGenerator = {
                             let op1IsDiv = (operator === '/');
                             let op2IsDiv = (operator2 === '/');
 
-                            if (op1IsDiv) {
-                                let quotient = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
-                                let divisor = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
+                            if (operator === '/') {
+                                // For division, always use numbers 2-9
+                                let divisor = getRandomNumber(0, 0, true); // 2-9
+                                let quotient = getRandomNumber(0, 0, true); // 2-9
                                 number1 = quotient * divisor;
                                 number2 = divisor;
-                                if (number1 > rangeEnd || number1 < rangeStart || number2 === 0 || number2 < rangeStart || number2 > rangeEnd) {
-                                    isValid = false;
-                                    continue;
-                                }
                             } else {
                                 number1 = getRandomNumber(rangeStart, rangeEnd);
                                 number2 = getRandomNumber(rangeStart, rangeEnd);
                             }
 
                             if (op2IsDiv) {
-                                let quotient = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
-                                let divisor = getRandomNumber(rangeStart > 0 ? rangeStart : 1, rangeEnd);
+                                let divisor = getRandomNumber(0, 0, true); // 2-9
+                                let quotient = getRandomNumber(0, 0, true); // 2-9
                                 if (op1IsDiv) {
+                                    // If both operators are division, use the same divisor for both
                                     number3 = divisor;
                                 } else {
+                                    // If only the second operator is division, set up the numbers accordingly
                                     number3 = divisor;
                                     number2 = quotient * divisor;
-                                    if (number2 > rangeEnd || number2 < rangeStart || number3 === 0 || number3 < rangeStart || number3 > rangeEnd) {
-                                        isValid = false;
-                                        continue;
-                                    }
                                 }
                             } else {
                                 number3 = getRandomNumber(rangeStart, rangeEnd);
                             }
 
                         } else if (operator === '*' || operator2 === '*') {
-                            let maxFactor = Math.floor(Math.pow(rangeEnd, 1/3));
-                            if (maxFactor < 1) maxFactor = 1;
-
-                            number1 = getRandomNumber(rangeStart, maxFactor);
-                            number2 = getRandomNumber(rangeStart, maxFactor);
-                            number3 = getRandomNumber(rangeStart, maxFactor);
+                            // For two-operator equations with multiplication, allow two-digit by one-digit
+                            const useTwoDigit = Math.random() < 0.5;
+                            
+                            if (useTwoDigit) {
+                                // Generate a two-digit number (10-99) and a one-digit number (2-9)
+                                number1 = getRandomNumber(10, 99);
+                                number2 = getRandomNumber(0, 0, true); // 2-9
+                                number3 = getRandomNumber(1, 9); // For the other operator
+                                
+                                // Ensure the multiplication result is within range
+                                if (number1 * number2 > rangeEnd) {
+                                    number1 = Math.min(99, Math.floor(rangeEnd / number2));
+                                    if (number1 < 10) number1 = 10; // Ensure it's still two digits
+                                }
+                            } else {
+                                // Original logic for single-digit multiplications
+                                let maxFactor = Math.floor(Math.pow(rangeEnd, 1/3));
+                                if (maxFactor < 1) maxFactor = 1;
+                                number1 = getRandomNumber(rangeStart, maxFactor);
+                                number2 = getRandomNumber(rangeStart, maxFactor);
+                                number3 = getRandomNumber(rangeStart, maxFactor);
+                            }
 
                         } else {
                             number1 = getRandomNumber(rangeStart, rangeEnd);

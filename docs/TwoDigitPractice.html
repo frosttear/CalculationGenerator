@@ -141,13 +141,9 @@
       },
       
       methods: {
-        displayOperator(operator) {
-          if (operator === '*') {
-            return '×';
-          } else if (operator === '/') {
-            return '÷';
-          }
-          return operator;
+        displayOperator(op) {
+          //if op is *, return '\u00D7', if op is /, return '\u00F7', else return op
+          return op === '*' ? '\u00D7' : op === '/' ? '\u00F7' : op;
         },
         
         async generateEquations() {

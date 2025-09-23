@@ -22,6 +22,7 @@ window.enTranslations = {
   "simplifiedChinese": "Simplified Chinese",
   "numberRange": "Number Range",
   "to": "to",
+  "rangeNote": "Note: The number range does not apply to multiplication and division operations.",
   "rowsPerDay": "Rows per day",
   "colsPerDay": "Columns per day",
   "dailyTwoOperatorsNum": "Daily two-operator problems",
