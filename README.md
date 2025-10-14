@@ -29,6 +29,7 @@ All pages can be accessed from the main [`docs/index.html`](./docs/index.html) p
 *   **[Two-Digit × One-Digit Practice](./docs/TwoDigitMultiplication.html):** Specialized multiplication practice with constraints (ones digit product < 10, result < 100)
 *   **[Two-Digit ÷ One-Digit Practice](./docs/TwoDigitDivision.html):** Specialized division practice with no remainder constraint and optional first digit constraint
 *   **[Two-Digit Mixed Practice](./docs/TwoDigitPractice.html):** Unified practice combining multiplication and division with operator selection and specialized constraints
+*   **[Grade 3 Semester 1 Practice](./docs/Grade3Semester1Practice.html):** Comprehensive mixed calculation practice with two types: (1) Two-digit mixed operations with one +/- and one ×/÷ operator, and (2) Three-digit vertical addition/subtraction. Optimized layout for 2 days per printed page.
 *   **[RMB Unit Transformation](./docs/RmbUnitTransformation.html):** Practice converting between Chinese currency units: Yuan (元), Jiao (角), and Fen (分).
 *   **[Time Unit Transformation](./docs/TimeUnitTransformation.html):** Practice converting between time units: Hours, Minutes, and Seconds.
 *   **[Length Unit Transformation](./docs/LengthUnitTransformation.html):** Practice converting between length units: Kilometers, Meters, Decimeters, Centimeters, and Millimeters.

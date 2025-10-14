@@ -6,7 +6,8 @@ module.exports = {
         '**/UnitConverter.test.js',
         '**/TwoDigitMultiplication.test.js',
         '**/TwoDigitDivision.test.js',
-        '**/TwoDigitPractice.test.js'
+        '**/TwoDigitPractice.test.js',
+        '**/Grade3Semester1Practice.test.js'
     ],
     verbose: true,
     collectCoverage: false
