@@ -104,35 +104,35 @@ describe('CalculationGenerator', () => {
             const testOptions = {
                 ...options,
                 operators: ['+', '*'],
-                rowsPerDay: 1,
-                colsPerDay: 1,
-                dailyTwoOperatorsNum: 1,
+                rowsPerDay: 10,
+                colsPerDay: 10,
+                dailyTwoOperatorsNum: 100,
                 rangeEnd: 200 // Increase range to allow two-digit by one-digit multiplications
             };
             
-            // Run multiple times to increase chance of hitting two-digit by one-digit
-            for (let i = 0; i < 20; i++) { // Increased attempts to 20
-                const equationGroups = CalculationGenerator.generateEquations(testOptions);
-                const equation = equationGroups[0][0][0];
-                
-                // Check if either operation is a two-digit by one-digit multiplication
-                const isTwoDigitByOneDigit = 
-                    (equation.operator === '*' && 
-                     ((equation.number1 >= 10 && equation.number1 <= 99 && equation.number2 >= 2 && equation.number2 <= 9) ||
-                      (equation.number2 >= 10 && equation.number2 <= 99 && equation.number1 >= 2 && equation.number1 <= 9))) ||
-                    (equation.operator2 === '*' && 
-                     ((equation.number2 >= 10 && equation.number2 <= 99 && equation.number3 >= 2 && equation.number3 <= 9) ||
-                      (equation.number3 >= 10 && equation.number3 <= 99 && equation.number2 >= 2 && equation.number2 <= 9)));
-                
-                if (isTwoDigitByOneDigit) {
-                    // If we found at least one two-digit by one-digit operation, the test passes
-                    expect(true).toBe(true);
-                    return;
-                }
-            }
+            // Generate a large set to ensure we find two-digit by one-digit operations
+            const equationGroups = CalculationGenerator.generateEquations(testOptions);
+            let foundTwoDigitByOneDigit = false;
             
-            // If we didn't find any after multiple attempts, the test fails with a helpful message
-            expect('No two-digit by one-digit operation found in two-operator equations after multiple attempts').toBe('Found');
+            equationGroups[0].forEach(row => {
+                row.forEach(equation => {
+                    // Check if either operation is a two-digit by one-digit multiplication
+                    const isTwoDigitByOneDigit = 
+                        (equation.operator === '*' && 
+                         ((equation.number1 >= 10 && equation.number1 <= 99 && equation.number2 >= 2 && equation.number2 <= 9) ||
+                          (equation.number2 >= 10 && equation.number2 <= 99 && equation.number1 >= 2 && equation.number1 <= 9))) ||
+                        (equation.operator2 === '*' && 
+                         ((equation.number2 >= 10 && equation.number2 <= 99 && equation.number3 >= 2 && equation.number3 <= 9) ||
+                          (equation.number3 >= 10 && equation.number3 <= 99 && equation.number2 >= 2 && equation.number2 <= 9)));
+                    
+                    if (isTwoDigitByOneDigit) {
+                        foundTwoDigitByOneDigit = true;
+                    }
+                });
+            });
+            
+            // With 100 two-operator equations, we should find at least some two-digit by one-digit operations
+            expect(foundTwoDigitByOneDigit).toBe(true);
         });
     });
 });
