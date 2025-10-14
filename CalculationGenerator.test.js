@@ -45,28 +45,29 @@ describe('CalculationGenerator', () => {
             const testOptions = {
                 ...options,
                 operators: ['*'],
-                rowsPerDay: 1,
-                colsPerDay: 1,
+                rowsPerDay: 20,
+                colsPerDay: 5,
                 rangeEnd: 200 // Increase range to allow two-digit by one-digit multiplications
             };
             
-            // Run multiple times to increase chance of hitting two-digit by one-digit
-            for (let i = 0; i < 10; i++) {
-                const equationGroups = CalculationGenerator.generateEquations(testOptions);
-                const equation = equationGroups[0][0][0];
-                const isTwoDigitByOneDigit = 
-                    (equation.number1 >= 10 && equation.number1 <= 99 && equation.number2 >= 2 && equation.number2 <= 9) ||
-                    (equation.number2 >= 10 && equation.number2 <= 99 && equation.number1 >= 2 && equation.number1 <= 9);
-                
-                if (isTwoDigitByOneDigit) {
-                    // If we found at least one two-digit by one-digit multiplication, the test passes
-                    expect(true).toBe(true);
-                    return;
-                }
-            }
+            // Generate a larger set to ensure we find two-digit by one-digit multiplications
+            const equationGroups = CalculationGenerator.generateEquations(testOptions);
+            let foundTwoDigitByOneDigit = false;
             
-            // If we didn't find any after multiple attempts, the test fails
-            expect('No two-digit by one-digit multiplication found after multiple attempts').toBe('Found');
+            equationGroups[0].forEach(row => {
+                row.forEach(equation => {
+                    const isTwoDigitByOneDigit = 
+                        (equation.number1 >= 10 && equation.number1 <= 99 && equation.number2 >= 2 && equation.number2 <= 9) ||
+                        (equation.number2 >= 10 && equation.number2 <= 99 && equation.number1 >= 2 && equation.number1 <= 9);
+                    
+                    if (isTwoDigitByOneDigit) {
+                        foundTwoDigitByOneDigit = true;
+                    }
+                });
+            });
+            
+            // With 100 equations, we should find at least some two-digit by one-digit multiplications
+            expect(foundTwoDigitByOneDigit).toBe(true);
         });
 
         test('should generate two-digit by one-digit divisions (using 2-9 for divisors)', () => {
