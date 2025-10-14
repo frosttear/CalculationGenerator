@@ -67,5 +67,16 @@ window.zhTranslations = {
   "leastDigitConstraintDescription": "确保个位数相乘结果小于10",
   "enableFirstDigitConstraint": "启用首位数约束",
   "firstDigitConstraintDescription": "确保首位数能被除数整除",
-  "equationGenerationError": "无法使用所选运算符 [{{operators}}] 和范围 {{rangeStart}}-{{rangeEnd}} 生成有效的算式。请尝试：1) 扩大数字范围，2) 包含加法 (+) 或减法 (-) 运算符，或 3) 对乘法/除法使用较小的范围。"
+  "equationGenerationError": "无法使用所选运算符 [{{operators}}] 和范围 {{rangeStart}}-{{rangeEnd}} 生成有效的算式。请尝试：1) 扩大数字范围，2) 包含加法 (+) 或减法 (-) 运算符，或 3) 对乘法/除法使用较小的范围。",
+  "grade3Semester1Title": "三年级上学期混合练习",
+  "grade3Semester1Description": "三年级上学期混合计算练习，包含两类题型",
+  "type1Settings": "题型一设置",
+  "type1Rows": "题型一行数",
+  "type1Cols": "题型一列数",
+  "type1Title": "一、两位数混合运算（一个加减、一个乘除）",
+  "type2Settings": "题型二设置",
+  "type2Count": "题型二题目数量",
+  "type2Cols": "题型二列数",
+  "type2Title": "竖式计算",
+  "dateLabel": "日期：_____"
 };

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-l10n-key="grade3Semester1Title"></title>
+  <script src="js/vue.min.js"></script>
+  <script src="js/l10n.js" defer></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    table {
+      margin-bottom: 20px;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    td {
+      padding: 5px 15px;
+      text-align: left;
+    }
+
+    .day-container {
+      display: table;
+      margin-bottom: 30px;
+    }
+
+    .header {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .date-field {
+      font-size: 14px;
+      font-weight: normal;
+      margin-left: 20px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+
+    .equation {
+      min-width: 150px;
+      padding: 5px;
+    }
+
+    .vertical-equation {
+      min-width: 150px;
+      padding: 15px 25px;
+      vertical-align: top;
+      height: 160px;
+    }
+
+    .vertical-space {
+      display: block;
+      height: 120px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
+  <div id="app">
+    <h1 data-l10n-key="grade3Semester1Title"></h1>
+    <div class="no-print input-area">
+      <label for="dayCount" data-l10n-key="dayCount"></label>
+      <input type="number" id="dayCount" v-model.number="dayCount" min="1" max="10" />
+
+      <div class="section-title" data-l10n-key="type1Settings"></div>
+      
+      <label for="type1Rows" data-l10n-key="type1Rows"></label>
+      <input type="number" id="type1Rows" v-model.number="type1Rows" min="1" max="10" />
+      
+      <label for="type1Cols" data-l10n-key="type1Cols"></label>
+      <input type="number" id="type1Cols" v-model.number="type1Cols" min="1" max="10" />
+
+      <div class="section-title" data-l10n-key="type2Settings"></div>
+      
+      <label for="type2Count" data-l10n-key="type2Count"></label>
+      <input type="number" id="type2Count" v-model.number="type2Count" min="1" max="20" />
+      
+      <label for="type2Cols" data-l10n-key="type2Cols"></label>
+      <input type="number" id="type2Cols" v-model.number="type2Cols" min="1" max="10" />
+      
+      <button @click="generateEquations" data-l10n-key="generate" class="generate-button"></button>
+    </div>
+    <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
+    
+    <div v-if="practiceData.length > 0">
+      <div v-for="(dayData, dayIndex) in practiceData" :key="'practice-' + dayIndex" class="day-container">
+        <h2 class="header">
+          <span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: dayIndex + 1 })"></span>
+          <span class="date-field" data-l10n-key="dateLabel"></span>
+        </h2>
+        
+        <!-- Type 1: Mixed Operations -->
+        <h3 class="section-title" data-l10n-key="type1Title"></h3>
+        <table border="0">
+          <tr v-for="(row, rowIndex) in dayData.type1" :key="'type1-row-' + rowIndex">
+            <td v-for="(equation, colIndex) in row" :key="'type1-eq-' + colIndex" class="equation">
+              {{ equation.display }} = ____
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Type 2: Three-digit Addition/Subtraction -->
+        <h3 class="section-title" data-l10n-key="type2Title"></h3>
+        <table border="0">
+          <tr v-for="(row, rowIndex) in dayData.type2" :key="'type2-row-' + rowIndex">
+            <td v-for="(equation, colIndex) in row" :key="'type2-eq-' + colIndex" class="vertical-equation">
+              {{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }} =<br>
+              <span class="vertical-space"></span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Answer Page -->
+    <div v-if="practiceData.length > 0" style="page-break-before: always;">
+      <h1><span data-l10n-key="answerPageTitle"></span></h1>
+      <div v-for="(dayData, dayIndex) in practiceData" :key="'answer-' + dayIndex" class="day-container">
+        <h2 class="header">
+          <span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: dayIndex + 1 })"></span>
+          <span class="date-field" data-l10n-key="dateLabel"></span>
+        </h2>
+        
+        <!-- Type 1 Answers -->
+        <h3 class="section-title" data-l10n-key="type1Title"></h3>
+        <table border="0">
+          <tr v-for="(row, rowIndex) in dayData.type1" :key="'ans-type1-row-' + rowIndex">
+            <td v-for="(equation, colIndex) in row" :key="'ans-type1-eq-' + colIndex" class="equation">
+              {{ equation.display }} = {{ equation.result }}
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Type 2 Answers -->
+        <h3 class="section-title" data-l10n-key="type2Title"></h3>
+        <table border="0">
+          <tr v-for="(row, rowIndex) in dayData.type2" :key="'ans-type2-row-' + rowIndex">
+            <td v-for="(equation, colIndex) in row" :key="'ans-type2-eq-' + colIndex" class="equation">
+              {{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }} = {{ equation.result }}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        dayCount: 5,
+        type1Rows: 4,
+        type1Cols: 5,
+        type2Count: 10,
+        type2Cols: 4,
+        practiceData: [],
+        errorMessage: ''
+      },
+      
+      methods: {
+        generateEquations() {
+          this.errorMessage = '';
+          
+          try {
+            this.practiceData = [];
+            
+            for (let day = 0; day < this.dayCount; day++) {
+              const dayData = {
+                type1: this.generateType1Equations(),
+                type2: this.generateType2Equations()
+              };
+              this.practiceData.push(dayData);
+            }
+            
+            this.$nextTick(() => {
+              window.applyTranslations();
+            });
+          } catch (error) {
+            this.errorMessage = error.message;
+            this.practiceData = [];
+          }
+        },
+        
+        // Type 1: Two operators, two-digit numbers, +/-/×/÷
+        generateType1Equations() {
+          const rows = [];
+          const totalEquations = this.type1Rows * this.type1Cols;
+          let equationCount = 0;
+          
+          while (equationCount < totalEquations) {
+            let isValid = false;
+            let attempts = 0;
+            let equation;
+            
+            while (!isValid && attempts < 1000) {
+              attempts++;
+              equation = this.generateSingleType1Equation();
+              
+              if (equation) {
+                isValid = true;
+              }
+            }
+            
+            if (!isValid) {
+              throw new Error('Unable to generate enough valid Type 1 equations. Please try reducing the count.');
+            }
+            
+            // Add equation to the current row
+            if (equationCount % this.type1Cols === 0) {
+              rows.push([]);
+            }
+            rows[rows.length - 1].push(equation);
+            equationCount++;
+          }
+          
+          return rows;
+        },
+        
+        generateSingleType1Equation() {
+          // One operator from +/-, one from ×/÷
+          const addSubOps = ['+', '-'];
+          const mulDivOps = ['×', '÷'];
+          
+          // Randomly decide which comes first
+          const addSubFirst = Math.random() < 0.5;
+          const op1 = addSubFirst ? addSubOps[Math.floor(Math.random() * 2)] : mulDivOps[Math.floor(Math.random() * 2)];
+          const op2 = addSubFirst ? mulDivOps[Math.floor(Math.random() * 2)] : addSubOps[Math.floor(Math.random() * 2)];
+          
+          // Generate three numbers (10-99)
+          let num1 = Math.floor(Math.random() * 90) + 10;
+          let num2 = Math.floor(Math.random() * 90) + 10;
+          let num3 = Math.floor(Math.random() * 90) + 10;
+          
+          // Handle division - ensure no remainder
+          if (op1 === '÷') {
+            // num1 / num2: make sure num1 is divisible by num2
+            num2 = Math.floor(Math.random() * 9) + 2; // 2-10
+            num1 = num2 * (Math.floor(Math.random() * 9) + 2); // Multiple of num2
+          }
+          
+          if (op2 === '÷') {
+            // Calculate intermediate result first
+            let intermediate = this.calculate(num1, num2, op1);
+            if (intermediate === null) return null;
+            
+            // Make sure intermediate is divisible by num3
+            num3 = Math.floor(Math.random() * 9) + 2;
+            // Adjust num2 so that intermediate result is divisible by num3
+            const targetIntermediate = num3 * (Math.floor(Math.random() * 9) + 2);
+            
+            // Recalculate to get proper values
+            if (op1 === '+') {
+              num2 = Math.max(10, targetIntermediate - num1);
+            } else if (op1 === '-') {
+              num2 = Math.max(1, num1 - targetIntermediate);
+            } else if (op1 === '×') {
+              if (num1 > 0 && targetIntermediate % num1 === 0) {
+                num2 = Math.min(99, Math.max(10, targetIntermediate / num1));
+              } else {
+                num2 = Math.floor(Math.random() * 9) + 2;
+              }
+            } else if (op1 === '÷') {
+              num1 = targetIntermediate * num2;
+            }
+          }
+          
+          // Handle multiplication - ensure product < 100
+          if (op1 === '×') {
+            num1 = Math.floor(Math.random() * 9) + 2;
+            num2 = Math.floor(Math.random() * Math.min(9, Math.floor(99 / num1))) + 2;
+          }
+          
+          if (op2 === '×') {
+            let intermediate = this.calculate(num1, num2, op1);
+            if (intermediate === null || intermediate <= 0) return null;
+            
+            // Ensure intermediate × num3 < 100
+            num3 = Math.floor(Math.random() * Math.min(9, Math.floor(99 / Math.max(1, intermediate)))) + 2;
+          }
+          
+          // Calculate intermediate result
+          const intermediate = this.calculate(num1, num2, op1);
+          if (intermediate === null) return null;
+          
+          // Calculate final result based on order of operations
+          let result;
+          if ((op1 === '×' || op1 === '÷') && (op2 === '+' || op2 === '-')) {
+            // Calculate op1 first, then apply op2
+            result = this.calculate(intermediate, num3, op2);
+          } else if ((op1 === '+' || op1 === '-') && (op2 === '×' || op2 === '÷')) {
+            // Calculate op2 first (num2 op2 num3), then apply op1
+            const part2 = this.calculate(num2, num3, op2);
+            if (part2 === null) return null;
+            result = this.calculate(num1, part2, op1);
+          } else {
+            // Same precedence, calculate left to right
+            result = this.calculate(intermediate, num3, op2);
+          }
+          
+          if (result === null || !Number.isInteger(result) || result < 0) return null;
+          
+          // Format display based on order of operations
+          let display;
+          if ((op1 === '+' || op1 === '-') && (op2 === '×' || op2 === '÷')) {
+            // Need parentheses or reorder display
+            display = `${num1} ${op1} ${num2} ${op2} ${num3}`;
+          } else {
+            display = `${num1} ${op1} ${num2} ${op2} ${num3}`;
+          }
+          
+          return {
+            number1: num1,
+            number2: num2,
+            number3: num3,
+            operator1: op1,
+            operator2: op2,
+            display: display,
+            result: result
+          };
+        },
+        
+        // Type 2: Three-digit addition/subtraction
+        generateType2Equations() {
+          const rows = [];
+          let equationCount = 0;
+          
+          while (equationCount < this.type2Count) {
+            const operator = Math.random() < 0.5 ? '+' : '-';
+            let num1 = Math.floor(Math.random() * 900) + 100; // 100-999
+            let num2 = Math.floor(Math.random() * 900) + 100; // 100-999
+            
+            // For subtraction, ensure num1 >= num2
+            if (operator === '-' && num1 < num2) {
+              [num1, num2] = [num2, num1];
+            }
+            
+            const result = operator === '+' ? num1 + num2 : num1 - num2;
+            
+            const equation = {
+              number1: num1,
+              number2: num2,
+              operator: operator,
+              result: result
+            };
+            
+            // Add equation to the current row
+            if (equationCount % this.type2Cols === 0) {
+              rows.push([]);
+            }
+            rows[rows.length - 1].push(equation);
+            equationCount++;
+          }
+          
+          return rows;
+        },
+        
+        calculate(a, b, op) {
+          switch (op) {
+            case '+':
+              return a + b;
+            case '-':
+              return a - b;
+            case '×':
+              return a * b;
+            case '÷':
+              return b !== 0 && a % b === 0 ? a / b : null;
+            default:
+              return null;
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>

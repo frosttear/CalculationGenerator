@@ -23,7 +23,7 @@ window.enTranslations = {
   "numberRange": "Number Range",
   "to": "to",
   "rangeNote": "Note: The number range does not apply to multiplication and division operations.",
-  "rowsPerDay": "Rows per day",
+boos  "rowsPerDay": "Rows per day",
   "colsPerDay": "Columns per day",
   "dailyTwoOperatorsNum": "Daily two-operator problems",
   "dayCount": "Number of days",
@@ -67,5 +67,16 @@ window.enTranslations = {
   "leastDigitConstraintDescription": "Ensure ones digit product < 10",
   "enableFirstDigitConstraint": "Enable First Digit Constraint",
   "firstDigitConstraintDescription": "Ensure first digit is divisible by divisor",
-  "equationGenerationError": "Unable to generate valid equations with the selected operators [{{operators}}] and range {{rangeStart}}-{{rangeEnd}}. Please try: 1) Expanding the number range, 2) Including addition (+) or subtraction (-) operators, or 3) Using a smaller range for multiplication/division."
+  "equationGenerationError": "Unable to generate valid equations with the selected operators [{{operators}}] and range {{rangeStart}}-{{rangeEnd}}. Please try: 1) Expanding the number range, 2) Including addition (+) or subtraction (-) operators, or 3) Using a smaller range for multiplication/division.",
+  "grade3Semester1Title": "Grade 3 Semester 1 Practice",
+  "grade3Semester1Description": "Mixed calculation practice for grade 3 semester 1, includes two types of equations",
+  "type1Settings": "Type 1 Settings",
+  "type1Rows": "Type 1 Rows",
+  "type1Cols": "Type 1 Columns",
+  "type1Title": "1. Two-digit Mixed Operations (One +/-, One ×/÷)",
+  "type2Settings": "Type 2 Settings",
+  "type2Count": "Type 2 Equation Count",
+  "type2Cols": "Type 2 Columns",
+  "type2Title": "Vertical Calculation",
+  "dateLabel": "Date: _____"
 };
