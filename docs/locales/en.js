@@ -7,7 +7,7 @@ window.enTranslations = {
   "calculationGeneratorTitle": "Calculation Generator",
   "calculationGeneratorDescription": "Customizable math problems with various operators.",
   "tensAdditionSubtractionTitle": "Tens Addition and Subtraction Practice",
-  "tensAdditionSubtractionDescription": "Practice addition and subtraction with multiples of 10 (10, 20, 30, etc.)",
+  "tensAdditionSubtractionDescription": "Practice addition and subtraction with at least one multiple of 10 (10, 20, 30, etc.)",
   "verticalEquationsTitle": "Vertical Equations",
   "verticalEquationsDescription": "Vertical addition and subtraction problems.",
   "rmbTransformationTitle": "RMB Unit Transformation",

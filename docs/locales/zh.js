@@ -7,7 +7,7 @@ window.zhTranslations = {
   "calculationGeneratorTitle": "口算天天练",
   "calculationGeneratorDescription": "可自定义运算符的数学题生成器",
   "tensAdditionSubtractionTitle": "整十数加减法练习",
-  "tensAdditionSubtractionDescription": "整十数（10、20、30等）加减法练习",
+  "tensAdditionSubtractionDescription": "至少一个数为整十数（10、20、30等）的加减法练习",
   "verticalEquationsTitle": "竖式计算",
   "verticalEquationsDescription": "竖式加减法练习",
   "rmbTransformationTitle": "人民币单位换算",

@@ -105,13 +105,23 @@
                   }
                 }
                 
-                if (tensInRange.length < 2) {
+                if (tensInRange.length < 1) {
                   console.error('Not enough multiples of 10 in range');
                   break;
                 }
                 
-                number1 = tensInRange[Math.floor(Math.random() * tensInRange.length)];
-                number2 = tensInRange[Math.floor(Math.random() * tensInRange.length)];
+                // At least one number must be a multiple of 10
+                // Randomly decide which number should be the multiple of 10
+                const firstIsTen = Math.random() < 0.5;
+                
+                if (firstIsTen) {
+                  number1 = tensInRange[Math.floor(Math.random() * tensInRange.length)];
+                  number2 = Math.floor(Math.random() * (this.rangeEnd - this.rangeStart + 1)) + this.rangeStart;
+                } else {
+                  number1 = Math.floor(Math.random() * (this.rangeEnd - this.rangeStart + 1)) + this.rangeStart;
+                  number2 = tensInRange[Math.floor(Math.random() * tensInRange.length)];
+                }
+                
                 operator = operators[Math.floor(Math.random() * operators.length)];
                 
                 result = this.calculateResult(number1, number2, operator);
