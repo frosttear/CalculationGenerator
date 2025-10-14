@@ -115,10 +115,10 @@ describe('Two-Digit Mixed Practice Generation', () => {
   describe('Mixed Operation Generation', () => {
     test('should generate mixed multiplication and division equations', () => {
       const options = {
-        equationCount: 10,
+        equationCount: 50, // Increased to make it statistically likely to have both types
         dayCount: 1,
-        rowsPerDay: 2,
-        colsPerDay: 5,
+        rowsPerDay: 5,
+        colsPerDay: 10,
         operators: ['*', '/'],
         enableLeastDigitConstraint: true,
         enableFirstDigitConstraint: true
@@ -127,7 +127,7 @@ describe('Two-Digit Mixed Practice Generation', () => {
       const result = generateTwoDigitPractice(options);
       
       expect(result).toHaveLength(1); // 1 day
-      expect(result[0]).toHaveLength(2); // 2 rows
+      expect(result[0]).toHaveLength(5); // 5 rows
       
       // Count total equations
       let totalEquations = 0;
@@ -145,9 +145,9 @@ describe('Two-Digit Mixed Practice Generation', () => {
         });
       });
       
-      expect(totalEquations).toBe(10);
-      expect(multiplicationCount + divisionCount).toBe(10);
-      // Should have both types of operations (with high probability)
+      expect(totalEquations).toBe(50);
+      expect(multiplicationCount + divisionCount).toBe(50);
+      // With 50 equations, should have both types (extremely high probability)
       expect(multiplicationCount).toBeGreaterThan(0);
       expect(divisionCount).toBeGreaterThan(0);
     });
