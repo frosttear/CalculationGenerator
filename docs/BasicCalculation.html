@@ -1,38 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-l10n-key="basicCalculationTitle"></title>
     <link rel="stylesheet" href="styles.css">
     <script src="js/vue.min.js"></script>
     <script src="js/l10n.js" defer></script>
+    <style>
+        .equation-section {
+            margin-bottom: 20px;
+        }
+        
+        .equation-section h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .equation-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .equation-item {
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
     <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
-    <h2 style="text-align:center" data-l10n-key="basicCalculationTitle"></h2>
     <div id="app">
-        <div class="container input-area no-print">
+        <h1 data-l10n-key="basicCalculationTitle"></h1>
+        
+        <div class="no-print input-area">
+            <label for="dayCount" data-l10n-key="dayCount"></label>
+            <input type="number" id="dayCount" v-model.number="dayCount" min="1" max="10" />
+            
+            <label for="additionCount" data-l10n-key="additionCount"></label>
+            <input type="number" id="additionCount" v-model.number="additionCount" min="1" max="50" />
+            
+            <label for="subtractionCount" data-l10n-key="subtractionCount"></label>
+            <input type="number" id="subtractionCount" v-model.number="subtractionCount" min="1" max="50" />
+            
             <button @click="generateAllEquations" data-l10n-key="generate" class="generate-button"></button>
         </div>
 
-        <div class="equation-container">
-            <!-- 加法列 -->
-            <div class="equation-column">
-                <h3 data-l10n-key="additionPractice"></h3>
-                <ul>
-                    <li v-for="(equation, index) in additionEquations" :key="index">
-                        {{ equation }} = ____
-                    </li>
-                </ul>
-            </div>
-
-            <!-- 减法列 -->
-            <div class="equation-column">
-                <h3 data-l10n-key="subtractionPractice"></h3>
-                <ul>
-                    <li v-for="(equation, index) in subtractionEquations" :key="index">
-                        {{ equation }} = ____
-                    </li>
-                </ul>
+        <div v-if="practiceData.length > 0">
+            <div v-for="(dayData, dayIndex) in practiceData" :key="'practice-' + dayIndex" style="page-break-after: always; margin-bottom: 30px;">
+                <h2 style="text-align: center; margin-bottom: 20px;">
+                    <span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: dayIndex + 1 })"></span>
+                </h2>
+                
+                <!-- Addition Section -->
+                <div class="equation-section">
+                    <h3 data-l10n-key="additionPractice"></h3>
+                    <div class="equation-grid">
+                        <div v-for="(equation, index) in dayData.addition" :key="'add-' + index" class="equation-item">
+                            {{ equation }} = ____
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Subtraction Section -->
+                <div class="equation-section">
+                    <h3 data-l10n-key="subtractionPractice"></h3>
+                    <div class="equation-grid">
+                        <div v-for="(equation, index) in dayData.subtraction" :key="'sub-' + index" class="equation-item">
+                            {{ equation }} = ____
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -41,38 +81,52 @@
         new Vue({
             el: '#app',
             data: {
-                additionEquations: [],
-                subtractionEquations: []
-            },
-            created() {
-                this.generateAllEquations();
+                dayCount: 5,
+                additionCount: 10,
+                subtractionCount: 10,
+                practiceData: []
             },
             methods: {
-                generateAdditionEquations() {
-                    let addArr = [];
-                    for(let a=1; a<=4; a++){
-                        for(let b=a; b<=9 - a; b++){
-                            addArr.push(`${a} + ${b}`);
+                generateAdditionEquations(count) {
+                    // Generate all possible addition equations within 10
+                    let allEquations = [];
+                    for(let a = 1; a <= 9; a++) {
+                        for(let b = 1; b <= 9; b++) {
+                            if(a + b <= 10) {
+                                allEquations.push(`${a} + ${b}`);
+                            }
                         }
                     }
-                    addArr.sort(() => Math.random() - 0.5);
-                    this.additionEquations = addArr;
+                    
+                    // Shuffle and take the required count
+                    allEquations.sort(() => Math.random() - 0.5);
+                    return allEquations.slice(0, Math.min(count, allEquations.length));
                 },
 
-                generateSubtractionEquations() {
-                    let subArr = [];
-                    for(let a=2; a<=9; a++){
-                        for(let b=1; b<a; b++){
-                            subArr.push(`${a} - ${b}`);
+                generateSubtractionEquations(count) {
+                    // Generate all possible subtraction equations within 10
+                    let allEquations = [];
+                    for(let a = 1; a <= 10; a++) {
+                        for(let b = 1; b < a; b++) {
+                            allEquations.push(`${a} - ${b}`);
                         }
                     }
-                    subArr.sort(() => Math.random() - 0.5);
-                    this.subtractionEquations = subArr;
+                    
+                    // Shuffle and take the required count
+                    allEquations.sort(() => Math.random() - 0.5);
+                    return allEquations.slice(0, Math.min(count, allEquations.length));
                 },
 
                 generateAllEquations() {
-                    this.generateAdditionEquations();
-                    this.generateSubtractionEquations();
+                    this.practiceData = [];
+                    
+                    for(let day = 0; day < this.dayCount; day++) {
+                        const dayData = {
+                            addition: this.generateAdditionEquations(this.additionCount),
+                            subtraction: this.generateSubtractionEquations(this.subtractionCount)
+                        };
+                        this.practiceData.push(dayData);
+                    }
                 }
             }
         });

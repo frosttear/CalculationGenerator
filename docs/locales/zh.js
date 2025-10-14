@@ -27,6 +27,8 @@ window.zhTranslations = {
   "colsPerDay": "每天列数",
   "dailyTwoOperatorsNum": "每天双运算符题目数",
   "dayCount": "天数",
+  "additionCount": "每天加法题目数量",
+  "subtractionCount": "每天减法题目数量",
   "operatorsIncluded": "包含的运算符",
   "generate": "生成",
   "practiceDay": "练习第 {{day}} 天",
