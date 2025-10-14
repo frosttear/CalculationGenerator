@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-l10n-key="tensAdditionSubtractionTitle"></title>
+  <script src="js/vue.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="js/l10n.js" defer></script>
+  <style>
+    .equation-column {
+      float: left;
+      width: 150px;
+    }
+
+    .equation-column ul {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
+
+    .equation-column li {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
+  <div id="app">
+    <h1 data-l10n-key="tensAdditionSubtractionTitle"></h1>
+    <div class="no-print input-area">
+      <div class="input-group" style="display: flex; align-items: center; gap: 10px;">
+        <label for="rangeStart" data-l10n-key="numberGreaterThanOrEqualTo"></label>
+        <input type="number" id="rangeStart" v-model.number="rangeStart" step="10" style="width: 60px;"/>
+        <label for="rangeEnd" data-l10n-key="numberLessThanOrEqualTo"></label>
+        <input type="number" id="rangeEnd" v-model.number="rangeEnd" step="10" style="width: 60px;"/>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="rowCount" data-l10n-key="rowCount"></label>
+        <input type="number" id="rowCount" v-model.number="rowCount" style="width: 60px;"/>
+        <label for="columnCount" data-l10n-key="columnCount"></label>
+        <input type="number" id="columnCount" v-model.number="columnCount" style="width: 60px;"/>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label data-l10n-key="operatorsIncluded"></label>
+        <label for="plus">+</label>
+        <input type="checkbox" id="plus" value="+" v-model="operators">
+        <label for="minus">−</label>
+        <input type="checkbox" id="minus" value="−" v-model="operators">
+      </div>
+      <button @click="generateEquations" data-l10n-key="generate" class="generate-button"></button>
+    </div>
+    <div class="equation-column" v-for="(column, index) in columns" :key="index">
+      <h2><span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: index + 1 })"></span></h2>
+      <ul>
+        <li v-for="(equation, i) in column" :key="i">
+          {{ equation.number1 }} {{ equation.operator }} {{ equation.number2 }} = ____
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        showInput: true,
+        rangeStart: 10,
+        rangeEnd: 100,
+        rowCount: 20,
+        columnCount: 5,
+        operators: ['+', '−'],
+        columns: []
+      },
+      methods: {
+        generateEquations() {
+          this.showInput = false;
+          this.columns = [];
+          const selectedOperators = this.operators;
+          const operators = selectedOperators.length === 0 ? ['+'] : selectedOperators;
+          
+          for (let c = 0; c < this.columnCount; c++) {
+            const column = [];
+            for (let i = 0; i < this.rowCount; i++) {
+              let number1, number2, operator, result;
+              let isValid = true;
+              let attempts = 0;
+              
+              do {
+                isValid = true;
+                attempts++;
+                
+                if (attempts > 1000) {
+                  console.error('Unable to generate valid equation');
+                  break;
+                }
+                
+                // Generate multiples of 10 within range
+                const tensInRange = [];
+                for (let n = Math.ceil(this.rangeStart / 10) * 10; n <= this.rangeEnd; n += 10) {
+                  if (n >= this.rangeStart && n <= this.rangeEnd) {
+                    tensInRange.push(n);
+                  }
+                }
+                
+                if (tensInRange.length < 2) {
+                  console.error('Not enough multiples of 10 in range');
+                  break;
+                }
+                
+                number1 = tensInRange[Math.floor(Math.random() * tensInRange.length)];
+                number2 = tensInRange[Math.floor(Math.random() * tensInRange.length)];
+                operator = operators[Math.floor(Math.random() * operators.length)];
+                
+                result = this.calculateResult(number1, number2, operator);
+                
+                // For subtraction, ensure result is non-negative and within range
+                if (operator === '−') {
+                  if (result < 0 || result < this.rangeStart) {
+                    isValid = false;
+                    continue;
+                  }
+                }
+                
+                // For addition, ensure result is within range
+                if (operator === '+') {
+                  if (result > this.rangeEnd) {
+                    isValid = false;
+                    continue;
+                  }
+                }
+                
+              } while (!isValid);
+              
+              if (isValid) {
+                column.push({ number1, number2, operator });
+              }
+            }
+            this.columns.push(column);
+          }
+        },
+        calculateResult(number1, number2, operator) {
+          switch (operator) {
+            case '+':
+              return number1 + number2;
+            case '−':
+              return number1 - number2;
+            default:
+              return 0;
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

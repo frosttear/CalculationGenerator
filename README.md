@@ -24,7 +24,7 @@ All pages can be accessed from the main [`docs/index.html`](./docs/index.html) p
 
 *   **[Basic Calculation](./docs/BasicCalculation.html):** Generates simple addition and subtraction problems for numbers within 10.
 *   **[Calculation Generator](./docs/CalculationGenerator.html):** A flexible generator for creating practice sheets with a mix of operators (+, -, ×, ÷), configurable number ranges, and problems with up to three numbers.
-*   **[Calculation Generator 2](./docs/CalculationGenerator2.html):** Creates column-based arithmetic problems.
+*   **[Tens Addition and Subtraction Practice](./docs/TensAdditionSubtraction.html):** Practice addition and subtraction with multiples of 10 (10, 20, 30, etc.).
 *   **[Vertical Equations](./docs/VerticalEquations.html):** Focuses on two-digit vertical (columnar) addition and subtraction.
 *   **[Two-Digit × One-Digit Practice](./docs/TwoDigitMultiplication.html):** Specialized multiplication practice with constraints (ones digit product < 10, result < 100)
 *   **[Two-Digit ÷ One-Digit Practice](./docs/TwoDigitDivision.html):** Specialized division practice with no remainder constraint and optional first digit constraint
