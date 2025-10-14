@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     table {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       border-collapse: collapse;
     }
 
@@ -27,13 +27,20 @@
 
     .day-container {
       display: table;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
+      page-break-inside: avoid;
+    }
+
+    @media print {
+      .day-container {
+        page-break-inside: avoid;
+      }
     }
 
     .header {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: bold;
-      margin-top: 20px;
+      margin-top: 12px;
       margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
@@ -41,35 +48,35 @@
     }
 
     .date-field {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: normal;
       margin-left: 20px;
       display: flex;
-      gap: 20px;
+      gap: 15px;
     }
 
     .section-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
-      margin-top: 15px;
+      margin-top: 12px;
       margin-bottom: 10px;
     }
 
     .equation {
       min-width: 150px;
-      padding: 5px;
+      padding: 4px 5px;
     }
 
     .vertical-equation {
       min-width: 150px;
-      padding: 15px 25px 15px 0;
+      padding: 10px 25px 10px 0;
       vertical-align: top;
-      height: 160px;
+      height: 100px;
     }
 
     .vertical-space {
       display: block;
-      height: 120px;
+      height: 70px;
       margin-top: 5px;
     }
   </style>
@@ -78,7 +85,7 @@
 <body>
   <a href="../index.html" class="back-link" data-l10n-key="backToHome"></a>
   <div id="app">
-    <h1 data-l10n-key="grade3Semester1Title"></h1>
+    <h1 class="no-print" data-l10n-key="grade3Semester1Title"></h1>
     <div class="no-print input-area">
       <label for="dayCount" data-l10n-key="dayCount"></label>
       <input type="number" id="dayCount" v-model.number="dayCount" min="1" max="10" />
@@ -104,7 +111,7 @@
     <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
     
     <div v-if="practiceData.length > 0">
-      <div v-for="(dayData, dayIndex) in practiceData" :key="'practice-' + dayIndex" class="day-container">
+      <div v-for="(dayData, dayIndex) in practiceData" :key="'practice-' + dayIndex" class="day-container" :style="(dayIndex + 1) % 2 === 0 ? 'page-break-after: always;' : ''">
         <h2 class="header">
           <span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: dayIndex + 1 })"></span>
           <div class="date-field">
@@ -139,7 +146,7 @@
     <!-- Answer Page -->
     <div v-if="practiceData.length > 0" style="page-break-before: always;">
       <h1><span data-l10n-key="answerPageTitle"></span></h1>
-      <div v-for="(dayData, dayIndex) in practiceData" :key="'answer-' + dayIndex" class="day-container">
+      <div v-for="(dayData, dayIndex) in practiceData" :key="'answer-' + dayIndex" class="day-container" :style="(dayIndex + 1) % 2 === 0 ? 'page-break-after: always;' : ''">
         <h2 class="header">
           <span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: dayIndex + 1 })"></span>
           <div class="date-field">
