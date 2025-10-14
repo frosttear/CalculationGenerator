@@ -102,14 +102,45 @@ const Grade3Semester1Generator = {
     
     while (equationCount < count) {
       const operator = Math.random() < 0.5 ? '+' : '-';
-      let num1 = Math.floor(Math.random() * 900) + 100;
-      let num2 = Math.floor(Math.random() * 900) + 100;
+      let num1, num2, result;
+      let isValid = false;
+      let attempts = 0;
       
-      if (operator === '-' && num1 < num2) {
-        [num1, num2] = [num2, num1];
+      while (!isValid && attempts < 1000) {
+        attempts++;
+        
+        if (operator === '+') {
+          // For addition: num1 + num2 <= 1000
+          num1 = Math.floor(Math.random() * 900) + 100;
+          num2 = Math.floor(Math.random() * 900) + 100;
+          result = num1 + num2;
+          
+          if (result <= 1000) {
+            isValid = true;
+          }
+        } else {
+          // For subtraction: allow num1 to be 100-1000
+          const allowThousand = Math.random() < 0.2; // 20% chance for 1000
+          if (allowThousand) {
+            num1 = 1000;
+            num2 = Math.floor(Math.random() * 900) + 100;
+          } else {
+            num1 = Math.floor(Math.random() * 900) + 100;
+            num2 = Math.floor(Math.random() * 900) + 100;
+          }
+          
+          if (num1 < num2) {
+            [num1, num2] = [num2, num1];
+          }
+          
+          result = num1 - num2;
+          isValid = true;
+        }
       }
       
-      const result = operator === '+' ? num1 + num2 : num1 - num2;
+      if (!isValid) {
+        throw new Error('Unable to generate valid Type 2 equations with result <= 1000');
+      }
       
       const equation = {
         number1: num1,
@@ -296,15 +327,34 @@ describe('Grade 3 Semester 1 Practice - Type 2: Three-Digit Addition/Subtraction
     expect(totalEquations).toBe(count);
   });
   
-  test('should use three-digit numbers (100-999)', () => {
-    const result = Grade3Semester1Generator.generateType2Equations(10, 4);
+  test('should ensure all results are <= 1000', () => {
+    const result = Grade3Semester1Generator.generateType2Equations(20, 4);
     
     result.forEach(row => {
       row.forEach(equation => {
+        expect(equation.result).toBeLessThanOrEqual(1000);
+        expect(equation.result).toBeGreaterThanOrEqual(0);
+      });
+    });
+  });
+  
+  test('should use three-digit numbers (100-999) or 1000 for subtraction minuend', () => {
+    const result = Grade3Semester1Generator.generateType2Equations(20, 4);
+    
+    result.forEach(row => {
+      row.forEach(equation => {
+        // num1 can be 100-1000 for subtraction, 100-999 for addition
         expect(equation.number1).toBeGreaterThanOrEqual(100);
-        expect(equation.number1).toBeLessThanOrEqual(999);
+        expect(equation.number1).toBeLessThanOrEqual(1000);
+        
+        // num2 is always 100-999
         expect(equation.number2).toBeGreaterThanOrEqual(100);
         expect(equation.number2).toBeLessThanOrEqual(999);
+        
+        // If num1 is 1000, it must be subtraction
+        if (equation.number1 === 1000) {
+          expect(equation.operator).toBe('-');
+        }
       });
     });
   });

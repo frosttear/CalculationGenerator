@@ -360,15 +360,48 @@
           
           while (equationCount < this.type2Count) {
             const operator = Math.random() < 0.5 ? '+' : '-';
-            let num1 = Math.floor(Math.random() * 900) + 100; // 100-999
-            let num2 = Math.floor(Math.random() * 900) + 100; // 100-999
+            let num1, num2, result;
+            let isValid = false;
+            let attempts = 0;
             
-            // For subtraction, ensure num1 >= num2
-            if (operator === '-' && num1 < num2) {
-              [num1, num2] = [num2, num1];
+            while (!isValid && attempts < 1000) {
+              attempts++;
+              
+              if (operator === '+') {
+                // For addition: num1 + num2 <= 1000
+                num1 = Math.floor(Math.random() * 900) + 100; // 100-999
+                num2 = Math.floor(Math.random() * 900) + 100; // 100-999
+                result = num1 + num2;
+                
+                // Check if result <= 1000
+                if (result <= 1000) {
+                  isValid = true;
+                }
+              } else {
+                // For subtraction: allow num1 to be 100-1000, num2 to be 100-999
+                // Special case: allow 1000 as minuend (e.g., 1000 - 366)
+                const allowThousand = Math.random() < 0.2; // 20% chance for 1000
+                if (allowThousand) {
+                  num1 = 1000;
+                  num2 = Math.floor(Math.random() * 900) + 100; // 100-999
+                } else {
+                  num1 = Math.floor(Math.random() * 900) + 100; // 100-999
+                  num2 = Math.floor(Math.random() * 900) + 100; // 100-999
+                }
+                
+                // Ensure num1 >= num2
+                if (num1 < num2) {
+                  [num1, num2] = [num2, num1];
+                }
+                
+                result = num1 - num2;
+                isValid = true;
+              }
             }
             
-            const result = operator === '+' ? num1 + num2 : num1 - num2;
+            if (!isValid) {
+              throw new Error('Unable to generate valid Type 2 equations with result <= 1000');
+            }
             
             const equation = {
               number1: num1,
