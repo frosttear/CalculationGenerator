@@ -78,5 +78,6 @@ boos  "rowsPerDay": "Rows per day",
   "type2Count": "Type 2 Equation Count",
   "type2Cols": "Type 2 Columns",
   "type2Title": "Vertical Calculation",
-  "dateLabel": "Date: _____"
+  "dateLabel": "Date: __________",
+  "timeLabel": "Time: ____ min"
 };

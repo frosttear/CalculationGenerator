@@ -78,5 +78,6 @@ window.zhTranslations = {
   "type2Count": "题型二题目数量",
   "type2Cols": "题型二列数",
   "type2Title": "竖式计算",
-  "dateLabel": "日期：_____"
+  "dateLabel": "日期：__________",
+  "timeLabel": "用时：____分"
 };

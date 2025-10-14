@@ -44,6 +44,8 @@
       font-size: 14px;
       font-weight: normal;
       margin-left: 20px;
+      display: flex;
+      gap: 20px;
     }
 
     .section-title {
@@ -105,7 +107,10 @@
       <div v-for="(dayData, dayIndex) in practiceData" :key="'practice-' + dayIndex" class="day-container">
         <h2 class="header">
           <span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: dayIndex + 1 })"></span>
-          <span class="date-field" data-l10n-key="dateLabel"></span>
+          <div class="date-field">
+            <span data-l10n-key="dateLabel"></span>
+            <span data-l10n-key="timeLabel"></span>
+          </div>
         </h2>
         
         <!-- Type 1: Mixed Operations -->
@@ -137,7 +142,10 @@
       <div v-for="(dayData, dayIndex) in practiceData" :key="'answer-' + dayIndex" class="day-container">
         <h2 class="header">
           <span data-l10n-key="practiceDay" :data-l10n-args="JSON.stringify({ day: dayIndex + 1 })"></span>
-          <span class="date-field" data-l10n-key="dateLabel"></span>
+          <div class="date-field">
+            <span data-l10n-key="dateLabel"></span>
+            <span data-l10n-key="timeLabel"></span>
+          </div>
         </h2>
         
         <!-- Type 1 Answers -->
