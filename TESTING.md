@@ -10,6 +10,8 @@ This project includes comprehensive test suites to validate all functionality us
 - **`UnitConverter.test.js`** - Comprehensive unit conversion tests (Length, Weight, RMB, Time)
 - **`TwoDigitMultiplication.test.js`** - Tests for two-digit × one-digit multiplication constraints
 - **`TwoDigitDivision.test.js`** - Tests for two-digit ÷ one-digit division constraints
+- **`TwoDigitPractice.test.js`** - Tests for mixed two-digit multiplication and division practice
+- **`Grade3Semester1Practice.test.js`** - Tests for Grade 3 Semester 1 mixed operations practice
 
 ## 🚀 How to Run Tests
 
@@ -41,6 +43,8 @@ npx jest CalculationGenerator.integration.test.js
 npx jest UnitConverter.test.js
 npx jest TwoDigitMultiplication.test.js
 npx jest TwoDigitDivision.test.js
+npx jest TwoDigitPractice.test.js
+npx jest Grade3Semester1Practice.test.js
 ```
 
 ## 📊 Test Coverage
@@ -60,29 +64,70 @@ npx jest TwoDigitDivision.test.js
 - ✅ Compound result generation
 
 ### **Specialized Practice Tests**
-- ✅ Two-digit multiplication constraints validation
-- ✅ Two-digit division constraints validation
+
+#### **Two-Digit Multiplication Tests**
+- ✅ Ones digit constraint validation (product < 10)
+- ✅ Result constraint validation (result < 100)
+- ✅ Two-digit × one-digit format validation
 - ✅ Equation count and distribution testing
-- ✅ Error handling for impossible constraints
 - ✅ Edge case validation
+
+#### **Two-Digit Division Tests**
+- ✅ No remainder constraint validation
+- ✅ First digit divisibility constraint (optional)
+- ✅ Two-digit ÷ one-digit format validation
+- ✅ Error handling for impossible constraints
+- ✅ Divisor range validation (excludes 1)
+
+#### **Two-Digit Mixed Practice Tests**
+- ✅ Mixed multiplication and division generation
+- ✅ Operator selection validation
+- ✅ Constraint combinations (least digit + first digit)
+- ✅ Mathematical correctness verification
+- ✅ Error handling for no operators selected
+
+### **Grade 3 Semester 1 Practice Tests**
+
+#### **Type 1: Mixed Operations (Two Operators)**
+- ✅ Correct equation count generation
+- ✅ One +/- and one ×/÷ operator constraint
+- ✅ Division operations with no remainder
+- ✅ Multiplication products < 100
+- ✅ Valid integer results
+- ✅ Two-digit number format validation
+
+#### **Type 2: Three-Digit Addition/Subtraction**
+- ✅ Correct equation count generation
+- ✅ Result ≤ 1000 constraint for addition
+- ✅ Three-digit numbers (100-999) or 1000 for subtraction minuend
+- ✅ Operator validation (+/- only)
+- ✅ Non-negative subtraction results
+- ✅ Mathematical correctness
+- ✅ Row distribution based on columns
+- ✅ Edge case handling (1 equation)
+
+#### **Integration Tests**
+- ✅ Multi-day generation for both types
+- ✅ Custom configuration handling
 
 ## 🎯 Test Results Interpretation
 
 ### **Jest Test Output**
 ```
-Test Suites: 6 passed, 6 total
-Tests:       49 passed, 49 total
+Test Suites: 7 passed, 7 total
+Tests:       68 passed, 68 total
 Snapshots:   0 total
-Time:        1.633 s
+Time:        ~1.0 s
 ```
 
 ### **Individual Test Suite Results**
-- **CalculationGenerator**: 6 tests (basic arithmetic and equation generation)
+- **CalculationGenerator**: 9 tests (basic arithmetic and equation generation)
 - **CalculationGenerator Integration**: 2 tests (mixed precedence and range validation)
 - **UnitConverter**: 11 tests (length, weight, RMB, time conversions)
 - **TwoDigitMultiplication**: 9 tests (constraint validation and edge cases)
 - **TwoDigitDivision**: 11 tests (division constraints and validation)
 - **TwoDigitPractice**: 10 tests (mixed operations, operator selection, constraints)
+- **Grade3Semester1Practice**: 16 tests (Type 1 mixed operations, Type 2 three-digit calculations, integration)
 
 ## 🛠️ Adding New Tests
 
@@ -115,6 +160,15 @@ Time:        1.633 s
 - All tests use the Jest framework (already installed and configured)
 - Tests validate mathematical correctness and constraint compliance
 - Robust error handling accounts for randomness in equation generation
-- All 49 tests consistently pass with unified Jest approach
-- Jest configuration includes all 6 test suites with verbose output
-- New unified two-digit practice page supports mixed multiplication and division operations
+- All **68 tests** consistently pass with unified Jest approach
+- Jest configuration includes all **7 test suites** with verbose output
+- Comprehensive coverage includes:
+  - Basic calculations and equation generation
+  - Unit conversions (length, weight, RMB, time)
+  - Specialized two-digit multiplication and division with constraints
+  - Mixed two-digit practice with operator selection
+  - Grade 3 Semester 1 practice with two equation types:
+    - Type 1: Mixed operations (one +/-, one ×/÷)
+    - Type 2: Three-digit addition/subtraction (result ≤ 1000, supports 1000 as minuend)
+- Tests include validation for edge cases, constraint compliance, and mathematical correctness
+- Flaky tests have been resolved by increasing sample sizes for statistical reliability
