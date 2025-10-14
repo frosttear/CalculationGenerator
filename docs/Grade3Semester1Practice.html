@@ -314,7 +314,7 @@
           
           // Calculate intermediate result
           const intermediate = this.calculate(num1, num2, op1);
-          if (intermediate === null) return null;
+          if (intermediate === null || intermediate < 0) return null;
           
           // Calculate final result based on order of operations
           let result;
@@ -324,7 +324,7 @@
           } else if ((op1 === '+' || op1 === '-') && (op2 === '×' || op2 === '÷')) {
             // Calculate op2 first (num2 op2 num3), then apply op1
             const part2 = this.calculate(num2, num3, op2);
-            if (part2 === null) return null;
+            if (part2 === null || part2 < 0) return null;
             result = this.calculate(num1, part2, op1);
           } else {
             // Same precedence, calculate left to right
