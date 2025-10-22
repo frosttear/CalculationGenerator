@@ -97,6 +97,12 @@
       
       <label for="type1Cols" data-l10n-key="type1Cols"></label>
       <input type="number" id="type1Cols" v-model.number="type1Cols" min="1" max="10" />
+      
+      <div class="checkbox-group">
+        <input type="checkbox" id="enableType1Constraint" v-model="enableType1LeastDigitConstraint" />
+        <label for="enableType1Constraint" data-l10n-key="enableLeastDigitConstraint"></label>
+      </div>
+      <div class="constraint-description" data-l10n-key="leastDigitConstraintDescription"></div>
 
       <div class="section-title" data-l10n-key="type2Settings"></div>
       
@@ -185,6 +191,7 @@
         dayCount: 5,
         type1Rows: 4,
         type1Cols: 5,
+        enableType1LeastDigitConstraint: true,
         type2Count: 10,
         type2Cols: 4,
         practiceData: [],
@@ -228,7 +235,7 @@
             
             while (!isValid && attempts < 1000) {
               attempts++;
-              equation = this.generateSingleType1Equation();
+              equation = this.generateSingleType1Equation(this.enableType1LeastDigitConstraint);
               
               if (equation) {
                 isValid = true;
@@ -250,7 +257,7 @@
           return rows;
         },
         
-        generateSingleType1Equation() {
+        generateSingleType1Equation(enableLeastDigitConstraint) {
           // One operator from +/-, one from ×/÷
           const addSubOps = ['+', '-'];
           const mulDivOps = ['×', '÷'];
@@ -301,15 +308,108 @@
           // Handle multiplication - ensure product < 100
           if (op1 === '×') {
             num1 = Math.floor(Math.random() * 9) + 2;
-            num2 = Math.floor(Math.random() * Math.min(9, Math.floor(99 / num1))) + 2;
+            const maxNum2 = Math.min(9, Math.floor(99 / num1));
+            
+            // Decide if we want to generate two-digit or one-digit num2
+            const canBeTwoDigit = maxNum2 >= 10;
+            const generateTwoDigit = canBeTwoDigit && Math.random() < 0.5; // 50% chance if possible
+            
+            if (generateTwoDigit && enableLeastDigitConstraint) {
+              // Generate two-digit num2 with constraint: ones digit × num1 < 10
+              const maxOnesDigit = Math.floor(10 / num1) - 1;
+              
+              if (maxOnesDigit >= 0) {
+                // Generate tens digit (1-9) and valid ones digit (0-maxOnesDigit)
+                const tensDigit = Math.floor(Math.random() * Math.min(9, Math.floor(maxNum2 / 10))) + 1;
+                const onesDigit = Math.floor(Math.random() * (maxOnesDigit + 1));
+                num2 = tensDigit * 10 + onesDigit;
+                
+                // Ensure result < 100
+                if (num1 * num2 >= 100) {
+                  num2 = Math.floor(Math.random() * (maxOnesDigit + 1)) + 10; // Fallback to smaller two-digit
+                }
+              } else {
+                // Can't make two-digit with constraint, use single-digit instead
+                num2 = Math.floor(Math.random() * Math.min(9, maxNum2)) + 2;
+              }
+            } else if (generateTwoDigit && !enableLeastDigitConstraint) {
+              // Generate two-digit without constraint
+              num2 = Math.floor(Math.random() * (maxNum2 - 9)) + 10;
+            } else {
+              // Generate one-digit num2 (no constraint needed for one-digit × one-digit)
+              num2 = Math.floor(Math.random() * Math.min(9, maxNum2)) + 2;
+            }
           }
           
           if (op2 === '×') {
             let intermediate = this.calculate(num1, num2, op1);
             if (intermediate === null || intermediate <= 0) return null;
             
-            // Ensure intermediate × num3 < 100
-            num3 = Math.floor(Math.random() * Math.min(9, Math.floor(99 / Math.max(1, intermediate)))) + 2;
+            const maxNum3 = Math.min(9, Math.floor(99 / Math.max(1, intermediate)));
+            
+            if (enableLeastDigitConstraint && (op1 === '+' || op1 === '-')) {
+              // num2 × num3 will be calculated first due to order of operations
+              // Constraint only applies to two-digit × one-digit patterns
+              
+              if (num2 >= 10) {
+                // num2 is two-digit, need to generate valid num3 or regenerate num2
+                const leastDigit2 = num2 % 10;
+                
+                if (leastDigit2 > 0) {
+                  const maxValidNum3 = Math.min(maxNum3, Math.floor(10 / leastDigit2) - 1);
+                  
+                  if (maxValidNum3 >= 2) {
+                    // Can generate valid num3
+                    num3 = Math.floor(Math.random() * (maxValidNum3 - 1)) + 2;
+                  } else {
+                    // Can't generate valid num3, need to regenerate num2 with constraint
+                    // ones digit of num2 must allow at least num3 = 2
+                    // leastDigit2 * 2 < 10, so leastDigit2 <= 4
+                    const maxLeastDigit = 4;
+                    const tensDigit2 = Math.floor(Math.random() * 9) + 1; // 1-9
+                    const onesDigit2 = Math.floor(Math.random() * (maxLeastDigit + 1)); // 0-4
+                    num2 = tensDigit2 * 10 + onesDigit2;
+                    
+                    // Recalculate intermediate and maxNum3
+                    intermediate = this.calculate(num1, num2, op1);
+                    if (intermediate === null || intermediate <= 0) return null;
+                    
+                    const newMaxNum3 = Math.min(9, Math.floor(99 / Math.max(1, intermediate)));
+                    const newLeastDigit2 = num2 % 10;
+                    const newMaxValidNum3 = newLeastDigit2 > 0 ? Math.min(newMaxNum3, Math.floor(10 / newLeastDigit2) - 1) : newMaxNum3;
+                    
+                    num3 = Math.floor(Math.random() * Math.min(newMaxValidNum3, 8)) + 2;
+                  }
+                } else {
+                  // leastDigit2 is 0 (e.g., 20, 30), any num3 works
+                  num3 = Math.floor(Math.random() * Math.min(9, maxNum3)) + 2;
+                }
+              } else {
+                // num2 is single-digit
+                const canBeTwoDigit = maxNum3 >= 10;
+                const generateTwoDigit = canBeTwoDigit && Math.random() < 0.5; // 50% chance
+                
+                if (generateTwoDigit) {
+                  // Generate two-digit num3 with constraint: ones digit × num2 < 10
+                  const maxOnesDigit = Math.floor(10 / num2) - 1;
+                  
+                  if (maxOnesDigit >= 0) {
+                    const tensDigit = Math.floor(Math.random() * Math.min(9, Math.floor(maxNum3 / 10))) + 1;
+                    const onesDigit = Math.floor(Math.random() * (maxOnesDigit + 1));
+                    num3 = tensDigit * 10 + onesDigit;
+                  } else {
+                    // Can't make two-digit with constraint, use single-digit
+                    num3 = Math.floor(Math.random() * Math.min(9, maxNum3)) + 2;
+                  }
+                } else {
+                  // Generate one-digit num3 (no constraint for one-digit × one-digit)
+                  num3 = Math.floor(Math.random() * Math.min(9, maxNum3)) + 2;
+                }
+              }
+            } else {
+              // No constraint or multiplication happens after addition/subtraction
+              num3 = Math.floor(Math.random() * maxNum3) + 2;
+            }
           }
           
           // Calculate intermediate result
