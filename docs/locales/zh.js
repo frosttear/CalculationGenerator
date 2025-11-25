@@ -81,5 +81,11 @@ window.zhTranslations = {
   "type2Cols": "题型二列数",
   "type2Title": "二、竖式计算",
   "dateLabel": "日期：__________",
-  "timeLabel": "用时：____分"
+  "timeLabel": "用时：____分",
+  "baseballPracticeTitle": "棒球游戏（Scratch改编）",
+  "baseballPracticeDescription": "使用 Scratch 编写并转换为 JavaScript 的棒球游戏。",
+  "flyingBirdPracticeTitle": "飞行小鸟游戏",
+  "flyingBirdPracticeDescription": "同样由 Scratch 编写并转换为 JavaScript 的飞行小鸟游戏，控制小鸟飞过障碍，获得更多分数。",
+  "gamesSectionTitle": "小游戏",
+  "gamesSectionDescription": "玩得开心！"
 };

@@ -81,5 +81,11 @@ window.enTranslations = {
   "type2Cols": "Type 2 Columns",
   "type2Title": "2. Vertical Calculation",
   "dateLabel": "Date: __________",
-  "timeLabel": "Time: ____ min"
+  "timeLabel": "Time: ____ min",
+  "baseballPracticeTitle": "Baseball Game (Scratch)",
+  "baseballPracticeDescription": "Baseball game written in Scratch and converted to JavaScript.",
+  "flyingBirdPracticeTitle": "Flying Bird Game",
+  "flyingBirdPracticeDescription": "Flying bird game written in Scratch and converted to JavaScript. Control a bird to fly over obstacles and gain more scores.",
+  "gamesSectionTitle": "Games",
+  "gamesSectionDescription": "Have fun!"
 };

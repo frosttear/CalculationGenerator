@@ -14,6 +14,16 @@ h1 {
     color: #333;
 }
 
+.games-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.games-section p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
